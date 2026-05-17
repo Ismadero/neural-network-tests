@@ -1,0 +1,17 @@
+# Virtual environment
+.nnt/
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Claude Code local settings
+.claude/settings.local.json
+
+# Trained model checkpoints
+*.pth
+*.pt
+
+# Logs
+*.log

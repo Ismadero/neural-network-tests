@@ -32,11 +32,9 @@ MOVE_INTERVAL = 0.175
 """ Amount of food in game"""
 FOOD_AMOUNT = 1
 
+""" Colors """
 BODY_COLOR = "darkgreen"
-
 HEAD_COLOR = "green"
-
 BACKGROUND_COLOR = "darkgray"
-
 FOOD_COLOR = "red"
 

@@ -18,20 +18,23 @@ class Snake:
 
         self.occupied = set(self.body)
 
-        self.direction = pygame.Vector2(1, 0)
-        self.next_direction = pygame.Vector2(1, 0)
+        # 0 == Right
+        # 1 == Up
+        # 2 == Left
+        # 3 == Down
+        self.direction = 0
+        self.next_direction = self.direction
 
 
     def change_direction(self, new_direction):
         """Change direction unless it is the opposite of the current one."""
-        new_dir = pygame.Vector2(new_direction[0], new_direction[1])
-        if new_dir != -self.direction:
-            self.next_direction = new_dir
+        if new_direction != (self.direction + 2) % 4:
+            self.next_direction = new_direction
 
     def update(self, has_eaten):
         """Move the snake forward. If it ate, keep the tail; otherwise remove it.""" 
         self.direction = self.next_direction
-        self.head_coord += self.direction
+        self.head_coord = self.get_next_coord()
         self.occupied.add((int(self.head_coord.x), int(self.head_coord.y)))
         self.body.insert(0, (int(self.head_coord.x), int(self.head_coord.y)))
         if not has_eaten:
@@ -40,7 +43,7 @@ class Snake:
 
     def check_collision(self):
         """Return True if the next move hits a wall or the snake's own body.""" 
-        next_coord = self.head_coord + self.next_direction
+        next_coord = self.get_next_coord()
         nx, ny = int(next_coord.x), int(next_coord.y)
         out_of_bounds = not (0 <= nx < constants.COLUMNS and 0 <= ny < constants.ROWS)
         hits_self = (nx, ny) in self.occupied
@@ -48,7 +51,21 @@ class Snake:
     
     def get_next_coord(self):
         """Return the next head position based on current direction."""
-        next_coord = self.head_coord + self.next_direction
+
+        #Convert selection into Vector2
+        match self.next_direction:
+            case 0:
+                next_direction = pygame.Vector2(1, 0)
+            case 1:
+                next_direction = pygame.Vector2(0, -1)
+            case 2:
+                next_direction = pygame.Vector2(-1, 0)
+            case 3:
+                next_direction = pygame.Vector2(0, 1)
+            case _:
+                next_direction = pygame.Vector2(1, 0)
+
+        next_coord = self.head_coord + next_direction
         return next_coord
 
     def get_head(self):
@@ -62,3 +79,7 @@ class Snake:
     def get_occupied(self):
         """Return the set of all cells currently occupied by the snake."""
         return self.occupied
+    
+    def get_direction(self):
+        """Return the current direction"""
+        return self.direction

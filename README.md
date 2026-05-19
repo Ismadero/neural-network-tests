@@ -35,6 +35,7 @@ python3 -m venv .nnt
 source .nnt/bin/activate
 pip install pygame
 pip install numpy
+pip install torch
 ```
 
 ### 2. Play the game
@@ -53,15 +54,23 @@ Use the **arrow keys** to control the snake. Your score, max possible score, and
 ```
 neural_network_tests/
 ├── snake_ai/
-│   └── snake/
-│       ├── main.py        # Entry point
-│       ├── game.py        # Game loop
-│       ├── snake.py       # Snake logic
-│       ├── food.py        # Food spawning
-│       ├── screen.py      # Pygame rendering
-│       ├── score.py       # Score tracking
-│       ├── constants.py   # Grid size, colors, timing
-│       └── plan.txt       # Full DQN architecture plan
+│   |── snake/
+│   |   ├── main.py        # Entry point
+│   |   ├── game.py        # Game loop
+│   |   ├── snake.py       # Snake logic
+│   |   ├── food.py        # Food spawning
+│   |   ├── screen.py      # Pygame rendering
+│   |   ├── score.py       # Score tracking
+│   |   ├── constants.py   # Grid size, colors,timing
+│   |   └── plan.txt       # Full DQN architecture plan
+|   |
+|   |── dqn/
+|   |   |── agent.py       # Agent logic
+|   |   |── model.py       # CNN Definition
+|   |   |── train.py       # Training loop
+|   |   |── evaluate.py    # Agent trained runner
+|   |
+|
 ```
 
 ---
@@ -71,7 +80,7 @@ neural_network_tests/
 - [✅] Headless game mode (`Game(render=False)`) for fast training
 - [✅] `game.step(action)` interface for external agent control
 - [✅] `get_state()` — returns `(3, 15, 15)` tensor
-- [ ] `model.py` — CNN definition in PyTorch
+- [✅] `model.py` — CNN definition in PyTorch
 - [ ] `agent.py` — DQN agent (epsilon-greedy, replay buffer)
 - [ ] `train.py` — training loop
 - [ ] `evaluate.py` — watch the trained agent play

@@ -59,8 +59,6 @@ CAMBIOS NECESARIOS AL CODIGO ACTUAL
 
   3. Metodo get_state(): retorna el tensor (3, 15, 15) con la grilla actual
 
-  4. Metodo get_reward(): retorna el reward del paso actual
-
 
 ORDEN DE IMPLEMENTACION SUGERIDO
 ----------------------------------

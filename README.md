@@ -34,6 +34,7 @@ Planned AI architecture:
 python3 -m venv .nnt
 source .nnt/bin/activate
 pip install pygame
+pip install numpy
 ```
 
 ### 2. Play the game
@@ -67,9 +68,9 @@ neural_network_tests/
 
 ## Roadmap
 
-- [ ] Headless game mode (`Game(render=False)`) for fast training
-- [ ] `game.step(action)` interface for external agent control
-- [ ] `get_state()` — returns `(3, 15, 15)` tensor
+- [✅] Headless game mode (`Game(render=False)`) for fast training
+- [✅] `game.step(action)` interface for external agent control
+- [✅] `get_state()` — returns `(3, 15, 15)` tensor
 - [ ] `model.py` — CNN definition in PyTorch
 - [ ] `agent.py` — DQN agent (epsilon-greedy, replay buffer)
 - [ ] `train.py` — training loop

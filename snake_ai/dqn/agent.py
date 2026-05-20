@@ -1,0 +1,93 @@
+import random
+import copy
+from collections import deque
+
+import torch
+import torch.nn as nn
+
+from model import SnakeCNN
+
+
+class ReplayBuffer:
+    """Stores and samples (s, a, r, s', done) experience tuples."""
+
+    def __init__(self, capacity):
+        self.buffer = deque(maxlen=capacity)
+
+    def push(self, state, action, reward, next_state, done):
+        self.buffer.append((state, action, reward, next_state, done))
+
+    def sample(self, batch_size):
+        batch = random.sample(self.buffer, batch_size)
+        states, actions, rewards, next_states, dones = zip(*batch)
+        return (
+            torch.stack(states),
+            torch.tensor(actions),
+            torch.tensor(rewards, dtype=torch.float32),
+            torch.stack(next_states),
+            torch.tensor(dones, dtype=torch.float32),
+        )
+
+    def __len__(self):
+        return len(self.buffer)
+
+
+class DQNAgent:
+    """DQN agent: manages action selection, experience storage, and network training."""
+
+    def __init__(self, rows, cols, lr=1e-3, gamma=0.99,
+                 epsilon_start=1.0, epsilon_end=0.05, epsilon_decay=0.995,
+                 buffer_capacity=10_000, batch_size=64, target_update_freq=100):
+
+        self.gamma = gamma
+        self.epsilon = epsilon_start
+        self.epsilon_end = epsilon_end
+        self.epsilon_decay = epsilon_decay
+        self.batch_size = batch_size
+        self.target_update_freq = target_update_freq
+        self.steps = 0
+
+        self.q_net = SnakeCNN(rows, cols)
+        self.target_net = copy.deepcopy(self.q_net)
+        self.target_net.eval()
+
+        self.optimizer = torch.optim.Adam(self.q_net.parameters(), lr=lr)
+        self.loss_fn = nn.MSELoss()
+        self.buffer = ReplayBuffer(buffer_capacity)
+
+    def select_action(self, state):
+        """Selects an action using epsilon-greedy: random action with probability epsilon,
+        otherwise the action with the highest Q-value. Returns -1 (left), 0 (straight), 1 (right)."""
+        if random.random() <= self.epsilon:
+            return random.randint(-1, 1)
+        else:
+            with torch.no_grad():
+                return self.q_net(state.unsqueeze(0)).argmax().item() - 1
+
+    def store(self, state, action, reward, next_state, done):
+        """Saves to the buffer state given"""
+        self.buffer.push(state, action, reward, next_state, done)
+
+    def train_step(self):
+        """Trains the network using the states known in buffer"""
+        if len(self.buffer) < self.batch_size:
+            return
+
+        states, actions, rewards, next_states, dones = self.buffer.sample(self.batch_size)
+
+        current_q = self.q_net(states).gather(1, actions.unsqueeze(1)).squeeze(1)
+
+        with torch.no_grad():
+            next_q = self.target_net(next_states).max(1).values
+            target_q = rewards + self.gamma * next_q * (1 - dones)
+
+        loss = self.loss_fn(current_q, target_q)
+        self.optimizer.zero_grad()
+        loss.backward()
+        self.optimizer.step()
+
+        self.epsilon = max(self.epsilon_end, self.epsilon * self.epsilon_decay)
+        self.steps += 1
+
+        if self.steps % self.target_update_freq == 0:
+            self.target_net.load_state_dict(self.q_net.state_dict())

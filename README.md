@@ -81,6 +81,6 @@ neural_network_tests/
 - [✅] `game.step(action)` interface for external agent control
 - [✅] `get_state()` — returns `(3, 15, 15)` tensor
 - [✅] `model.py` — CNN definition in PyTorch
-- [ ] `agent.py` — DQN agent (epsilon-greedy, replay buffer)
+- [✅] `agent.py` — DQN agent (epsilon-greedy, replay buffer)
 - [ ] `train.py` — training loop
 - [ ] `evaluate.py` — watch the trained agent play

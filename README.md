@@ -23,6 +23,9 @@ Planned AI architecture:
   - 15×15 grid
   - Keyboard arrow controls
   - Score tracking and session summary on exit
+- **DQN Agent** — fully trained with CNN, replay buffer, and epsilon-greedy exploration
+  - Training loop with model checkpointing
+  - Evaluation mode to watch the trained agent play
 
 ---
 
@@ -38,7 +41,7 @@ pip install numpy
 pip install torch
 ```
 
-### 2. Play the game
+### 2. Play the game manually
 
 ```bash
 cd snake_ai/snake
@@ -46,6 +49,28 @@ python main.py
 ```
 
 Use the **arrow keys** to control the snake. Your score, max possible score, and session time are printed on exit.
+
+### 3. Train the AI agent
+
+```bash
+python snake_ai/train.py
+```
+
+To continue training from a saved checkpoint:
+
+```bash
+python snake_ai/train.py snake_dqn_<id>.pth
+```
+
+Press `Ctrl+C` at any time to stop and save the model.
+
+### 4. Watch the trained agent play
+
+```bash
+python snake_ai/evaluate.py
+```
+
+Edit `model` in `evaluate.py` to point to your saved `.pth` file.
 
 ---
 
@@ -66,8 +91,7 @@ neural_network_tests/
 │   |   ├── food.py        # Food spawning
 │   |   ├── screen.py      # Pygame rendering
 │   |   ├── score.py       # Score tracking
-│   |   ├── constants.py   # Grid size, colors,timing
-│   |   └── plan.txt       # Full DQN architecture plan
+│   |   └── constants.py   # Grid size, colors,timing
 |   |
 |   |── dqn/
 |   |   |── agent.py       # Agent logic
@@ -75,15 +99,3 @@ neural_network_tests/
 |   |
 |
 ```
-
----
-
-## Roadmap
-
-- [✅] Headless game mode (`Game(render=False)`) for fast training
-- [✅] `game.step(action)` interface for external agent control
-- [✅] `get_state()` — returns `(3, 15, 15)` tensor
-- [✅] `model.py` — CNN definition in PyTorch
-- [✅] `agent.py` — DQN agent (epsilon-greedy, replay buffer)
-- [✅] `train.py` — training loop
-- [✅] `evaluate.py` — watch the trained agent play

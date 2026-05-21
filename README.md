@@ -53,7 +53,12 @@ Use the **arrow keys** to control the snake. Your score, max possible score, and
 
 ```
 neural_network_tests/
+|
 ├── snake_ai/
+|   |
+|   |── train.py       # Training loop
+|   |── evaluate.py    # Trained model runner
+|   |   
 │   |── snake/
 │   |   ├── main.py        # Entry point
 │   |   ├── game.py        # Game loop
@@ -66,9 +71,7 @@ neural_network_tests/
 |   |
 |   |── dqn/
 |   |   |── agent.py       # Agent logic
-|   |   |── model.py       # CNN Definition
-|   |   |── train.py       # Training loop
-|   |   |── evaluate.py    # Agent trained runner
+|   |   └── model.py       # CNN Definition
 |   |
 |
 ```
@@ -82,5 +85,5 @@ neural_network_tests/
 - [✅] `get_state()` — returns `(3, 15, 15)` tensor
 - [✅] `model.py` — CNN definition in PyTorch
 - [✅] `agent.py` — DQN agent (epsilon-greedy, replay buffer)
-- [ ] `train.py` — training loop
-- [ ] `evaluate.py` — watch the trained agent play
+- [✅] `train.py` — training loop
+- [✅] `evaluate.py` — watch the trained agent play

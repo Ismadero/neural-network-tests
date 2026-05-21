@@ -114,7 +114,7 @@ class Game:
         for occ in body:
             state[0][occ[1]][occ[0]] = 1.0
         head = self.snake.get_head()
-        state[1][head.y][head.x] = 1.0
+        state[1][int(head.y)][int(head.x)] = 1.0
         foods = self.food.get_foods()
         for food in foods:
             state[2][food[1]][food[0]] = 1.0

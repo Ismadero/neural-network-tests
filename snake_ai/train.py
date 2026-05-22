@@ -21,6 +21,7 @@ columns = constants.COLUMNS
 
 model = None
 episodes = 0
+episodes_max = 1500
 
 dir = sys.argv[1] if len(sys.argv) > 1 else ""
 
@@ -42,7 +43,7 @@ else:
 scores = []
 steps = []
 
-while 1:
+while episodes < episodes_max:
     #Loop that iterates over episodes
     done = False
     game = gameLib.Game(render = False)
@@ -63,13 +64,14 @@ while 1:
 
         #Save model
         if episodes % 100 == 0:
-            print(f"{episodes} episodes completed" + "\n")
-            print(f"min: {min(scores)}  max: {max(scores)}  avg: {sum(scores)/len(scores):.1f}")
-            print(f"min: {min(steps)}  max: {max(steps)}  avg: {sum(steps)/len(steps):.1f}")
+            print(f"{episodes} episodes completed")
+            print(f"Score min: {min(scores)}  max: {max(scores)}  avg: {sum(scores)/len(scores):.1f}")
+            print(f"Steps min: {min(steps)}  max: {max(steps)}  avg: {sum(steps)/len(steps):.1f}")
             scores = []
             steps = []
-            print(f"Actual epsilon: {agent.get_epsilon()}")
-            save_state(agent.export_model(), episodes, dir)
+            model = agent.export_model()
+            print(f"Actual epsilon: {model['epsilon']}")
+            save_state(model, episodes, dir)
 
     except KeyboardInterrupt:
         game.quit()

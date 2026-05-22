@@ -36,7 +36,7 @@ class DQNAgent:
     """DQN agent: manages action selection, experience storage, and network training."""
 
     def __init__(self, rows = 15, cols = 15, lr=1e-3, gamma=0.99,
-                 epsilon_start=1.0, epsilon_end=0.05, epsilon_decay=0.9999,
+                 epsilon_start=1.0, epsilon_end=0.05, epsilon_decay=0.99995,
                  buffer_capacity=10_000, batch_size=64, target_update_freq=100):
 
         self.gamma = gamma
@@ -107,7 +107,3 @@ class DQNAgent:
         self.q_net.load_state_dict(model['model'])
         self.epsilon = model['epsilon']
         self.optimizer.load_state_dict(model['optimizer'])
-
-    def get_epsilon(self):
-        """Returns the actual epsilon"""
-        return self.epsilon

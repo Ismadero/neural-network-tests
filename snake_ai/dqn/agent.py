@@ -1,7 +1,5 @@
 import random
 import copy
-import os
-import uuid
 from collections import deque
 
 import torch
@@ -37,7 +35,7 @@ class ReplayBuffer:
 class DQNAgent:
     """DQN agent: manages action selection, experience storage, and network training."""
 
-    def __init__(self, model = "", rows = 15, cols = 15, lr=1e-3, gamma=0.99,
+    def __init__(self, model = None, rows = 15, cols = 15, lr=1e-3, gamma=0.99,
                  epsilon_start=1.0, epsilon_end=0.05, epsilon_decay=0.995,
                  buffer_capacity=10_000, batch_size=64, target_update_freq=100):
 
@@ -49,16 +47,11 @@ class DQNAgent:
         self.target_update_freq = target_update_freq
         self.steps = 0
         self.model = model
+        self.episodes = 0
         
         self.q_net = SnakeCNN(rows, cols)
-        if model != "":
-            if os.path.exists(model):
-                    self.q_net.load_state_dict(torch.load(model))
-            else:
-                print(f"{model} is not a file, model will initiate whit random values")
-        else:
-            self.model = f"snake_dqn_{uuid.uuid4().hex[:8]}.pth"
-        
+        if model != None:
+            self.q_net.load_state_dict(model)
         
         self.target_net = copy.deepcopy(self.q_net)
         self.target_net.eval()
@@ -106,7 +99,6 @@ class DQNAgent:
         if self.steps % self.target_update_freq == 0:
             self.target_net.load_state_dict(self.q_net.state_dict())
 
-    def save_state(self):
-        """Saves actual network into "model" file if there was no model given it generates one"""
-        torch.save(self.q_net.state_dict(), self.model)
-        print(f"Model saved into '{self.model}' file" + "\n")
+    def get_state_dict(self):
+        """Returns networks's state_dict"""
+        return self.q_net.state_dict()

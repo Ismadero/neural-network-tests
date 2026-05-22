@@ -24,17 +24,23 @@ episodes = 0
 
 dir = sys.argv[1] if len(sys.argv) > 1 else ""
 
+agent = agentLib.DQNAgent(rows = rows, cols = columns)
 if dir != "":
-    if os.path.exists(dir):
-        saved = torch.load(dir)
-        model = saved['model']
-        episodes = saved['episodes']
-    else:
-        print(f"{dir} is not a file, model will initiate whit random values")
+    try:
+        if os.path.exists(dir):
+            saved = torch.load(dir)
+            model = saved['model']
+            episodes = saved['episodes']
+            agent.import_model(model)
+        else:
+            print(f"{dir} is not a file, model will initiate whit random values")
+    except KeyError:
+        print("File given is no a trained model")
+    
 else:
     dir = f"snake_dqn_{uuid.uuid4().hex[:8]}.pth"
-
-agent = agentLib.DQNAgent(model = model, rows = rows, cols = columns)
+scores = []
+steps = []
 
 while 1:
     #Loop that iterates over episodes
@@ -50,21 +56,24 @@ while 1:
             agent.train_step()
             done = next_state[2]
 
+        steps.append(game.get_steps())
         results = game.quit()
+        scores.append(results[0])
         episodes += 1
 
         #Save model
-        if episodes % 10 == 0:
-            print(f"{episodes} episodes completed" + "\n" +
-                  "Last game results:" + "\n" +
-                  "Score : " + str(results[0]) + "\n" +
-                  "Max achievable : " + str(results[1]) + "\n" +
-                  "Time : " + str(results[2]) + "sec")
-            save_state(agent.get_state_dict(), episodes, dir)
+        if episodes % 100 == 0:
+            print(f"{episodes} episodes completed" + "\n")
+            print(f"min: {min(scores)}  max: {max(scores)}  avg: {sum(scores)/len(scores):.1f}")
+            print(f"min: {min(steps)}  max: {max(steps)}  avg: {sum(steps)/len(steps):.1f}")
+            scores = []
+            steps = []
+            print(f"Actual epsilon: {agent.get_epsilon()}")
+            save_state(agent.export_model(), episodes, dir)
 
     except KeyboardInterrupt:
         game.quit()
         print("\n" + f"{episodes} episodes completed")
-        save_state(agent.get_state_dict(), episodes, dir)
+        save_state(agent.export_model(), episodes, dir)
         break
 

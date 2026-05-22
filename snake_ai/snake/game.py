@@ -16,6 +16,7 @@ class Game:
         self.running = True
         self.score = scorelib.Score()
         self.render = render
+        self.steps = 0
         if self.render:
             self.screen = screen.Screen()
 
@@ -67,6 +68,7 @@ class Game:
                 if self.render:
                     self.screen.update(self.snake.get_occupied(), self.snake.get_head(), self.food.get_foods())
                 self.timer -= constants.MOVE_INTERVAL
+                self.steps += 1
 
     def step(self, action):
         """ Run one iteration of the game, it should not be used whit run at the same time
@@ -99,6 +101,7 @@ class Game:
         if self.render:
             self.screen.update(self.snake.get_occupied(), self.snake.get_head(), self.food.get_foods())
 
+        self.steps += 1
         return self.get_state(), reward, False
 
     def get_state(self):
@@ -119,6 +122,10 @@ class Game:
         for food in foods:
             state[2][food[1]][food[0]] = 1.0
         return state
+
+    def get_steps(self):
+        """Returns the amouns of steps made in game"""
+        return self.steps
 
     def quit(self):
         """Shut down pygame and return (score, max_achievable, time_seconds)."""

@@ -64,7 +64,7 @@ class Game:
                     occupied_aux = self.snake.get_occupied()
                     self.food.new_food(occupied_aux, 1)
                     self.score.add_point()
-
+                    
                 if self.render:
                     self.screen.update(self.snake.get_occupied(), self.snake.get_head(), self.food.get_foods())
                 self.timer -= constants.MOVE_INTERVAL
@@ -85,12 +85,27 @@ class Game:
             self.running = False
             return self.get_state(), -10, True
 
+        head = self.snake.get_head()
         next_coord = self.snake.get_next_coord()
+        
+        foods = self.food.get_foods()
+
+        head_dist = min(
+            head.distance_squared_to(pygame.Vector2(food[0], food[1])) 
+            for food in foods)
+        
+        next_dist = min(
+            next_coord.distance_squared_to(pygame.Vector2(food[0], food[1])) 
+            for food in foods)
+
+        if head_dist >= next_dist:
+            reward = -0.1
+        else:
+            reward = 0.1
+
         next_coord = (int(next_coord.x), int(next_coord.y))
         has_eaten = self.food.eat_food(next_coord)
         self.snake.update(has_eaten)
-
-        reward = -0.1
 
         if has_eaten:
             occupied_aux = self.snake.get_occupied()

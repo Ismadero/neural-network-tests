@@ -93,3 +93,40 @@
 
 **Choice for next experiment**
     We are going to change the reward values in order to get better eat-more learning.
+
+### Experiment 3 — 2026-05-23
+**Hyperparameters**
+- epsilon_start: 1.0 / epsilon_end: 0.05 / epsilon_decay: 0.99995
+- gamma: 0.99
+- lr: 1e-3
+- batch_size: 64
+- buffer_capacity: 10,000
+- target_update_freq: 100
+- episodes: 1500
+- reward shaping: +0.1 if moving closer to food, -0.1 if moving away
+
+**Results** (every 100 episodes)
+| Episodes  | Score min | Score max | Score avg | Steps avg | Epsilon |
+|-----------|-----------|-----------|-----------|-----------|---------|
+| 100       | 0         | 1         | 0.1       | 44.1      | ~0.801  |
+| 200       | 0         | 1         | 0.2       | 40.6      | ~0.650  |
+| 300       | 0         | 1         | 0.1       | 53.2      | ~0.496  |
+| 400       | 0         | 2         | 0.3       | 57.6      | ~0.370  |
+| 500       | 0         | 1         | 0.1       | 61.7      | ~0.270  |
+| 600       | 0         | 2         | 0.2       | 80.1      | ~0.180  |
+| 700       | 0         | 1         | 0.3       | 163.2     | ~0.079  |
+| 800       | 0         | 2         | 0.3       | 273.3     | ~0.05   |
+| 900       | 0         | 2         | 0.4       | 304.6     | ~0.05   |
+| 1000      | 0         | 2         | 0.5       | 280.9     | ~0.05   |
+| 1100      | 0         | 2         | 0.5       | 383.3     | ~0.05   |
+| 1200      | 0         | 3         | 0.3       | 327.6     | ~0.05   |
+| 1300      | 0         | 3         | 0.5       | 399.9     | ~0.05   |
+| 1400      | 0         | 3         | 0.3       | 511.5     | ~0.05   |
+| 1500      | 0         | 2         | 0.5       | 401.6     | ~0.05   |
+
+**Observations**
+    In this case the model learns to make circles, again it eats little food and repeats this behavior where it just loops in circles. 
+
+**Choice for next experiment**
+    We will adjust the reward shaping to make moving away more punishing, or getting closer more rewarding, to discourage the circular looping behavior.
+    The changes are gonna be applied whit the next values: +0.2 / -0.5

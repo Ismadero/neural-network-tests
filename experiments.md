@@ -166,3 +166,39 @@
 
 **Choice for next experiment**
     It was a logic bug where i put the reward shaping inverted, in the next step im going to fix this and see new results. :)
+
+### Experiment 5 — 2026-05-23
+**Hyperparameters**
+- epsilon_start: 1.0 / epsilon_end: 0.05 / epsilon_decay: 0.99995
+- gamma: 0.99
+- lr: 1e-3
+- batch_size: 64
+- buffer_capacity: 10,000
+- target_update_freq: 100
+- episodes: 1500
+- reward shaping: +0.2 if moving closer to food, -0.5 if moving away (bug fixed from Exp 4)
+
+**Results** (every 100 episodes)
+| Episodes  | Score min | Score max | Score avg | Steps avg | Epsilon |
+|-----------|-----------|-----------|-----------|-----------|---------|
+| 100       | 0         | 1         | 0.2       | 38.9      | ~0.822  |
+| 200       | 0         | 1         | 0.2       | 46.2      | ~0.649  |
+| 300       | 0         | 1         | 0.2       | 49.3      | ~0.505  |
+| 400       | 0         | 2         | 0.1       | 65.7      | ~0.361  |
+| 500       | 0         | 1         | 0.2       | 61.6      | ~0.264  |
+| 600       | 0         | 1         | 0.2       | 98.9      | ~0.160  |
+| 700       | 0         | 1         | 0.2       | 129.1     | ~0.084  |
+| 800       | 0         | 2         | 0.3       | 295.6     | ~0.05   |
+| 900       | 0         | 2         | 0.3       | 311.3     | ~0.05   |
+| 1000      | 0         | 3         | 0.4       | 358.1     | ~0.05   |
+| 1100      | 0         | 1         | 0.4       | 478.7     | ~0.05   |
+| 1200      | 0         | 3         | 0.6       | 251.3     | ~0.05   |
+| 1300      | 0         | 2         | 0.4       | 303.2     | ~0.05   |
+| 1400      | 0         | 1         | 0.3       | 253.5     | ~0.05   |
+| 1500      | 0         | 2         | 0.4       | 205.9     | ~0.05   |
+
+**Observations**
+    The snake approaches food but then moves away without eating. Based in Exp 1 and 2, where score avg starts rising once epsilon stabilizes at 0.05 — the model needs more exploitation time to consolidate the learned behavior. The current 1500 episodes may not be enough training at low epsilon.
+
+**Choice for next experiment**
+    Load exp_5.pth and continue training with the same hyperparameters but more episodes (e.g. 3000 total). Exp 5 reaches epsilon_min with score avg ~0.3, a better starting point than any previous experiment, so exploiting this model longer may yield better results.

@@ -99,9 +99,9 @@ class Game:
             for food in foods)
 
         if head_dist >= next_dist:
-            reward = -0.5
-        else:
             reward = 0.2
+        else:
+            reward = -0.5
 
         next_coord = (int(next_coord.x), int(next_coord.y))
         has_eaten = self.food.eat_food(next_coord)

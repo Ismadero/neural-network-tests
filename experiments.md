@@ -129,4 +129,40 @@
 
 **Choice for next experiment**
     We will adjust the reward shaping to make moving away more punishing, or getting closer more rewarding, to discourage the circular looping behavior.
-    The changes are gonna be applied whit the next values: +0.2 / -0.5
+    The changes are gonna be applied with the next values: +0.2 / -0.5
+
+### Experiment 4 — 2026-05-23
+**Hyperparameters**
+- epsilon_start: 1.0 / epsilon_end: 0.05 / epsilon_decay: 0.99995
+- gamma: 0.99
+- lr: 1e-3
+- batch_size: 64
+- buffer_capacity: 10,000
+- target_update_freq: 100
+- episodes: 1500
+- **BUG** reward shaping: -0.5 if moving closer to food, +0.2 if moving away
+
+**Results** (every 100 episodes)
+| Episodes  | Score min | Score max | Score avg | Steps avg | Epsilon |
+|-----------|-----------|-----------|-----------|-----------|---------|
+| 100       | 0         | 1         | 0.2       | 35.2      | ~0.837  |
+| 200       | 0         | 2         | 0.2       | 43.1      | ~0.671  |
+| 300       | 0         | 2         | 0.1       | 50.8      | ~0.518  |
+| 400       | 0         | 1         | 0.1       | 52.3      | ~0.397  |
+| 500       | 0         | 1         | 0.2       | 71.9      | ~0.276  |
+| 600       | 0         | 1         | 0.1       | 85.6      | ~0.179  |
+| 700       | 0         | 2         | 0.3       | 114.5     | ~0.100  |
+| 800       | 0         | 1         | 0.3       | 209.2     | ~0.05   |
+| 900       | 0         | 1         | 0.3       | 328.9     | ~0.05   |
+| 1000      | 0         | 2         | 0.4       | 334.8     | ~0.05   |
+| 1100      | 0         | 2         | 0.3       | 364.2     | ~0.05   |
+| 1200      | 0         | 1         | 0.3       | 311.9     | ~0.05   |
+| 1300      | 0         | 2         | 0.3       | 313.8     | ~0.05   |
+| 1400      | 0         | 2         | 0.2       | 216.6     | ~0.05   |
+| 1500      | 0         | 1         | 0.3       | 323.3     | ~0.05   |
+
+**Observations**
+    In this case the model behaves rarely and it seems that it wants to be away from the food instead to get closer.
+
+**Choice for next experiment**
+    It was a logic bug where i put the reward shaping inverted, in the next step im going to fix this and see new results. :)

@@ -85,23 +85,25 @@ class Game:
             self.running = False
             return self.get_state(), -10, True
 
-        head = self.snake.get_head()
         next_coord = self.snake.get_next_coord()
         
-        foods = self.food.get_foods()
+        #head = self.snake.get_head()
+        #foods = self.food.get_foods()
+        #
+        #head_dist = min(
+        #    head.distance_squared_to(pygame.Vector2(food[0], food[1])) 
+        #    for food in foods)
+        #
+        #next_dist = min(
+        #    next_coord.distance_squared_to(pygame.Vector2(food[0], food[1])) 
+        #    for food in foods)
+        #
+        #if head_dist >= next_dist:
+        #    reward = 0.2
+        #else:
+        #    reward = -0.5
 
-        head_dist = min(
-            head.distance_squared_to(pygame.Vector2(food[0], food[1])) 
-            for food in foods)
-        
-        next_dist = min(
-            next_coord.distance_squared_to(pygame.Vector2(food[0], food[1])) 
-            for food in foods)
-
-        if head_dist >= next_dist:
-            reward = 0.2
-        else:
-            reward = -0.5
+        reward = (-0.1)
 
         next_coord = (int(next_coord.x), int(next_coord.y))
         has_eaten = self.food.eat_food(next_coord)
@@ -141,6 +143,10 @@ class Game:
     def get_steps(self):
         """Returns the amouns of steps made in game"""
         return self.steps
+    
+    def get_score(self):
+        """Returns the actual score of the game"""
+        return self.score.get_score()
 
     def quit(self):
         """Shut down pygame and return (score, max_achievable, time_seconds)."""

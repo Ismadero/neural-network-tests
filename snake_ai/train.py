@@ -53,9 +53,15 @@ while episodes < episodes_max:
             state = torch.tensor(game.get_state())
             action = agent.select_action(state)
             next_state = game.step(action)
-            agent.store(state, action, next_state[1], next_state[0], next_state[2])
+            agent.store(state, 
+                        action, 
+                        next_state[1], 
+                        next_state[0], 
+                        next_state[2])
             agent.train_step()
-            done = next_state[2]
+            max_steps = 100 + 50*game.get_score()
+            done = next_state[2] or game.get_steps() >= max_steps
+
 
         steps.append(game.get_steps())
         results = game.quit()

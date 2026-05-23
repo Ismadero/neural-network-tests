@@ -239,3 +239,39 @@
 
 **Choice for next experiment**
     Load exp_2.pth and continue training with the same hyperparameters but more episodes (3000)
+
+### Experiment 7 — 2026-05-23
+**Hyperparameters**
+- epsilon_start: 1.0 / epsilon_end: 0.05 / epsilon_decay: 0.99995
+- gamma: 0.99
+- lr: 1e-3
+- batch_size: 64
+- buffer_capacity: 10,000
+- target_update_freq: 100
+- episodes: 3000 (loaded from exp_2.pth, continued from ep 1500)
+- No reward shaping
+
+**Results** (every 100 episodes)
+| Episodes  | Score min | Score max | Score avg | Steps avg | Epsilon |
+|-----------|-----------|-----------|-----------|-----------|---------|
+| 1600      | 0         | 3         | 0.5       | 373.6     | ~0.05   |
+| 1700      | 0         | 3         | 0.6       | 377.2     | ~0.05   |
+| 1800      | 0         | 2         | 0.3       | 274.6     | ~0.05   |
+| 1900      | 0         | 3         | 0.5       | 374.7     | ~0.05   |
+| 2000      | 0         | 3         | 0.6       | 447.4     | ~0.05   |
+| 2100      | 0         | 2         | 0.5       | 543.9     | ~0.05   |
+| 2200      | 0         | 2         | 0.6       | 440.6     | ~0.05   |
+| 2300      | 0         | 2         | 0.5       | 398.6     | ~0.05   |
+| 2400      | 0         | 3         | 0.6       | 430.2     | ~0.05   |
+| 2500      | 0         | 3         | 0.6       | 333.4     | ~0.05   |
+| 2600      | 0         | 3         | 0.5       | 309.9     | ~0.05   |
+| 2700      | 0         | 2         | 0.6       | 412.1     | ~0.05   |
+| 2800      | 0         | 3         | 0.5       | 336.6     | ~0.05   |
+| 2900      | 0         | 4         | 0.5       | 356.4     | ~0.05   |
+| 3000      | 0         | 3         | 0.8       | 308.1     | ~0.05   |
+
+**Observations**
+    In this case the growth of score avg is notorious but when evaulated we can see that the snake loops in circles most of the time, that explains the high steps avg.
+
+**Choice for next experiment**
+    We will set an step limit per episode according to the next formule: step_max = 100 + 50 * score.

@@ -201,4 +201,41 @@
     The snake approaches food but then moves away without eating. Based in Exp 1 and 2, where score avg starts rising once epsilon stabilizes at 0.05 — the model needs more exploitation time to consolidate the learned behavior. The current 1500 episodes may not be enough training at low epsilon.
 
 **Choice for next experiment**
-    Load exp_5.pth and continue training with the same hyperparameters but more episodes (e.g. 3000 total). Exp 5 reaches epsilon_min with score avg ~0.3, a better starting point than any previous experiment, so exploiting this model longer may yield better results.
+    Load exp_5.pth and continue training with the same hyperparameters but more episodes (3000).
+
+### Experiment 6 — 2026-05-23
+**Hyperparameters**
+- epsilon_start: 1.0 / epsilon_end: 0.05 / epsilon_decay: 0.99995
+- gamma: 0.99
+- lr: 1e-3
+- batch_size: 64
+- buffer_capacity: 10,000
+- target_update_freq: 100
+- episodes: 3000 (loaded from exp_5.pth, continued from ep 1500)
+- reward shaping: +0.2 if moving closer to food, -0.5 if moving away
+
+**Results** (every 100 episodes)
+| Episodes  | Score min | Score max | Score avg | Steps avg | Epsilon |
+|-----------|-----------|-----------|-----------|-----------|---------|
+| 1600      | 0         | 2         | 0.2       | 183.7     | ~0.05   |
+| 1700      | 0         | 2         | 0.2       | 283.6     | ~0.05   |
+| 1800      | 0         | 2         | 0.2       | 273.1     | ~0.05   |
+| 1900      | 0         | 1         | 0.2       | 452.6     | ~0.05   |
+| 2000      | 0         | 2         | 0.2       | 288.7     | ~0.05   |
+| 2100      | 0         | 1         | 0.1       | 297.9     | ~0.05   |
+| 2200      | 0         | 1         | 0.1       | 176.2     | ~0.05   |
+| 2300      | 0         | 1         | 0.0       | 74.0      | ~0.05   |
+| 2400      | 0         | 1         | 0.1       | 9.2       | ~0.05   |
+| 2500      | 0         | 1         | 0.0       | 9.5       | ~0.05   |
+| 2600      | 0         | 2         | 0.1       | 9.0       | ~0.05   |
+| 2700      | 0         | 1         | 0.1       | 9.4       | ~0.05   |
+| 2800      | 0         | 1         | 0.0       | 8.8       | ~0.05   |
+| 2900      | 0         | 1         | 0.0       | 9.2       | ~0.05   |
+| 3000      | 0         | 1         | 0.0       | 8.8       | ~0.05   |
+
+**Observations**
+    In this case the model learns how to die fast, not the result i was hoping for but what i got.
+    Based on experiments 1, 2 the actual reward shaping is behaving worst than the simple reward.
+
+**Choice for next experiment**
+    Load exp_2.pth and continue training with the same hyperparameters but more episodes (3000)

@@ -113,7 +113,7 @@ class Game:
             occupied_aux = self.snake.get_occupied()
             self.food.new_food(occupied_aux, 1)
             self.score.add_point()
-            reward = 10
+            reward = 50
 
         if self.render:
             self.screen.update(self.snake.get_occupied(), self.snake.get_head(), self.food.get_foods())

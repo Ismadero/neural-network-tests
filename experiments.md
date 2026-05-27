@@ -378,4 +378,56 @@
     We can see a better growing in score_avg, with better results in score max. When evaluated the snake behaves less irregularly moving straighter.
 
 **Choice for next experiment**
-    Because the model eats little food, I decided to make the eating reward higher, thus it should make the model search for more food when running. 
+    Because the model eats little food, I decided to make the eating reward higher (50), thus it should make the model search for more food when running.
+
+### Experiment 10 — 2026-05-27
+**Hyperparameters**
+- epsilon_start: 1.0 / epsilon_end: 0.05 / epsilon_decay: 0.99995
+- gamma: 0.60
+- lr: 1e-3
+- batch_size: 64
+- buffer_capacity: 10,000
+- target_update_freq: 100
+- episodes: 3000 (fresh training, no loaded model)
+- step limit: step_max = 100 + 50 * score (dynamic)
+- reward: +50 if eaten, -0.1 per step, -10 if die
+
+**Results** (every 100 episodes)
+| Episodes  | Score min | Score max | Score avg | Steps avg | Epsilon |
+|-----------|-----------|-----------|-----------|-----------|---------|
+| 100       | 0         | 1         | 0.1       | 37.4      | ~0.828  |
+| 200       | 0         | 2         | 0.1       | 40.5      | ~0.673  |
+| 300       | 0         | 1         | 0.1       | 44.4      | ~0.537  |
+| 400       | 0         | 1         | 0.2       | 45.7      | ~0.425  |
+| 500       | 0         | 2         | 0.2       | 46.4      | ~0.336  |
+| 600       | 0         | 3         | 0.2       | 43.0      | ~0.269  |
+| 700       | 0         | 2         | 0.3       | 49.6      | ~0.209  |
+| 800       | 0         | 2         | 0.2       | 41.9      | ~0.169  |
+| 900       | 0         | 2         | 0.3       | 47.5      | ~0.133  |
+| 1000      | 0         | 2         | 0.3       | 56.8      | ~0.100  |
+| 1100      | 0         | 2         | 0.3       | 35.1      | ~0.083  |
+| 1200      | 0         | 2         | 0.3       | 36.6      | ~0.069  |
+| 1300      | 0         | 2         | 0.3       | 35.5      | ~0.057  |
+| 1400      | 0         | 2         | 0.3       | 43.5      | ~0.05   |
+| 1500      | 0         | 2         | 0.4       | 31.2      | ~0.05   |
+| 1600      | 0         | 2         | 0.2       | 27.4      | ~0.05   |
+| 1700      | 0         | 2         | 0.3       | 36.1      | ~0.05   |
+| 1800      | 0         | 2         | 0.3       | 31.1      | ~0.05   |
+| 1900      | 0         | 2         | 0.3       | 38.2      | ~0.05   |
+| 2000      | 0         | 2         | 0.4       | 24.1      | ~0.05   |
+| 2100      | 0         | 2         | 0.4       | 25.9      | ~0.05   |
+| 2200      | 0         | 2         | 0.4       | 26.1      | ~0.05   |
+| 2300      | 0         | 1         | 0.4       | 31.1      | ~0.05   |
+| 2400      | 0         | 2         | 0.3       | 26.9      | ~0.05   |
+| 2500      | 0         | 1         | 0.2       | 23.7      | ~0.05   |
+| 2600      | 0         | 2         | 0.3       | 23.6      | ~0.05   |
+| 2700      | 0         | 2         | 0.3       | 28.1      | ~0.05   |
+| 2800      | 0         | 2         | 0.3       | 24.6      | ~0.05   |
+| 2900      | 0         | 2         | 0.3       | 30.8      | ~0.05   |
+| 3000      | 0         | 2         | 0.4       | 30.6      | ~0.05   |
+
+**Observations**
+    We can observe that the step_avg keeps low values, same happens with the score_avg, this happens when higher eating rewards appears, the model looks to eat once and then die.
+
+**Choice for next experiment** 
+    Lower the eating reward till 10 again, but we punish more the dying reward till -25, so the relation between eat:die is 1:2.5.

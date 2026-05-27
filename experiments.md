@@ -275,3 +275,107 @@
 
 **Choice for next experiment**
     We will set an step limit per episode according to the next formule: step_max = 100 + 50 * score.
+
+### Experiment 8 — 2026-05-23
+**Hyperparameters**
+- epsilon_start: 1.0 / epsilon_end: 0.05 / epsilon_decay: 0.99995
+- gamma: 0.99
+- lr: 1e-3
+- batch_size: 64
+- buffer_capacity: 10,000
+- target_update_freq: 100
+- episodes: 3000 (fresh training, no loaded model)
+- step limit: step_max = 100 + 50 * score (dynamic)
+- No reward shaping
+
+**Results** (every 100 episodes)
+| Episodes  | Score min | Score max | Score avg | Steps avg | Epsilon |
+|-----------|-----------|-----------|-----------|-----------|---------|
+| 100       | 0         | 1         | 0.2       | 42.5      | ~0.807  |
+| 200       | 0         | 1         | 0.1       | 45.7      | ~0.640  |
+| 300       | 0         | 1         | 0.1       | 35.1      | ~0.534  |
+| 400       | 0         | 2         | 0.2       | 53.0      | ~0.408  |
+| 500       | 0         | 2         | 0.2       | 51.9      | ~0.313  |
+| 600       | 0         | 1         | 0.2       | 62.7      | ~0.228  |
+| 700       | 0         | 2         | 0.2       | 55.8      | ~0.172  |
+| 800       | 0         | 2         | 0.2       | 68.3      | ~0.122  |
+| 900       | 0         | 1         | 0.2       | 74.8      | ~0.084  |
+| 1000      | 0         | 2         | 0.2       | 78.5      | ~0.056  |
+| 1100      | 0         | 2         | 0.2       | 83.6      | ~0.05   |
+| 1200      | 0         | 2         | 0.2       | 77.4      | ~0.05   |
+| 1300      | 0         | 3         | 0.1       | 82.9      | ~0.05   |
+| 1400      | 0         | 2         | 0.2       | 84.5      | ~0.05   |
+| 1500      | 0         | 2         | 0.2       | 88.2      | ~0.05   |
+| 1600      | 0         | 3         | 0.2       | 84.7      | ~0.05   |
+| 1700      | 0         | 2         | 0.3       | 84.8      | ~0.05   |
+| 1800      | 0         | 2         | 0.3       | 87.7      | ~0.05   |
+| 1900      | 0         | 2         | 0.2       | 92.2      | ~0.05   |
+| 2000      | 0         | 2         | 0.2       | 95.0      | ~0.05   |
+| 2100      | 0         | 2         | 0.2       | 87.3      | ~0.05   |
+| 2200      | 0         | 2         | 0.2       | 91.5      | ~0.05   |
+| 2300      | 0         | 3         | 0.3       | 91.6      | ~0.05   |
+| 2400      | 0         | 1         | 0.1       | 89.1      | ~0.05   |
+| 2500      | 0         | 2         | 0.2       | 87.4      | ~0.05   |
+| 2600      | 0         | 3         | 0.2       | 88.2      | ~0.05   |
+| 2700      | 0         | 3         | 0.2       | 94.7      | ~0.05   |
+| 2800      | 0         | 2         | 0.2       | 96.7      | ~0.05   |
+| 2900      | 0         | 3         | 0.3       | 93.2      | ~0.05   |
+| 3000      | 0         | 3         | 0.3       | 92.5      | ~0.05   |
+
+**Observations**
+    In this case there is not much to see, only that the model progressively tends to live longer, also the snake keeps looping when evaluated.
+
+**Choice for next experiment**
+    Change gamma to 0.6 in order to make it go straighter and avoid looping.
+
+### Experiment 9 — 2026-05-26
+**Hyperparameters**
+- epsilon_start: 1.0 / epsilon_end: 0.05 / epsilon_decay: 0.99995
+- gamma: 0.60
+- lr: 1e-3
+- batch_size: 64
+- buffer_capacity: 10,000
+- target_update_freq: 100
+- episodes: 3000 (fresh training, no loaded model)
+- step limit: step_max = 100 + 50 * score (dynamic)
+- No reward shaping
+
+**Results** (every 100 episodes)
+| Episodes  | Score min | Score max | Score avg | Steps avg | Epsilon |
+|-----------|-----------|-----------|-----------|-----------|---------|
+| 100       | 0         | 2         | 0.1       | 35.4      | ~0.836  |
+| 200       | 0         | 1         | 0.1       | 41.4      | ~0.676  |
+| 300       | 0         | 1         | 0.2       | 44.9      | ~0.538  |
+| 400       | 0         | 2         | 0.2       | 42.7      | ~0.433  |
+| 500       | 0         | 2         | 0.2       | 51.2      | ~0.333  |
+| 600       | 0         | 2         | 0.4       | 48.4      | ~0.261  |
+| 700       | 0         | 2         | 0.3       | 55.5      | ~0.197  |
+| 800       | 0         | 2         | 0.2       | 58.9      | ~0.146  |
+| 900       | 0         | 2         | 0.3       | 60.4      | ~0.108  |
+| 1000      | 0         | 2         | 0.4       | 62.6      | ~0.078  |
+| 1100      | 0         | 2         | 0.5       | 78.1      | ~0.053  |
+| 1200      | 0         | 4         | 0.5       | 92.2      | ~0.05   |
+| 1300      | 0         | 3         | 0.4       | 90.7      | ~0.05   |
+| 1400      | 0         | 3         | 0.6       | 86.0      | ~0.05   |
+| 1500      | 0         | 4         | 0.3       | 79.9      | ~0.05   |
+| 1600      | 0         | 4         | 0.5       | 80.1      | ~0.05   |
+| 1700      | 0         | 3         | 0.5       | 92.9      | ~0.05   |
+| 1800      | 0         | 4         | 0.4       | 82.4      | ~0.05   |
+| 1900      | 0         | 3         | 0.5       | 70.6      | ~0.05   |
+| 2000      | 0         | 2         | 0.3       | 78.2      | ~0.05   |
+| 2100      | 0         | 5         | 0.5       | 86.7      | ~0.05   |
+| 2200      | 0         | 2         | 0.5       | 64.7      | ~0.05   |
+| 2300      | 0         | 3         | 0.4       | 81.5      | ~0.05   |
+| 2400      | 0         | 2         | 0.4       | 86.1      | ~0.05   |
+| 2500      | 0         | 3         | 0.4       | 78.2      | ~0.05   |
+| 2600      | 0         | 2         | 0.3       | 83.7      | ~0.05   |
+| 2700      | 0         | 3         | 0.5       | 84.2      | ~0.05   |
+| 2800      | 0         | 3         | 0.5       | 90.1      | ~0.05   |
+| 2900      | 0         | 3         | 0.5       | 91.5      | ~0.05   |
+| 3000      | 0         | 3         | 0.4       | 88.0      | ~0.05   |
+
+**Observations**
+    We can see a better growing in score_avg, with better results in score max. When evaluated the snake behaves less irregularly moving straighter.
+
+**Choice for next experiment**
+    Because the model eats little food, I decided to make the eating reward higher, thus it should make the model search for more food when running. 

@@ -83,7 +83,7 @@ class Game:
         can_continue = not self.snake.check_collision()
         if not can_continue:
             self.running = False
-            return self.get_state(), -10, True
+            return self.get_state(), -25, True
 
         next_coord = self.snake.get_next_coord()
         
@@ -113,7 +113,7 @@ class Game:
             occupied_aux = self.snake.get_occupied()
             self.food.new_food(occupied_aux, 1)
             self.score.add_point()
-            reward = 50
+            reward = 10
 
         if self.render:
             self.screen.update(self.snake.get_occupied(), self.snake.get_head(), self.food.get_foods())

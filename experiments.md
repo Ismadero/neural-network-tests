@@ -10,6 +10,7 @@
 - batch_size:
 - buffer_capacity:
 - target_update_freq:
+- reward:
 
 **Results** (every 100 episodes)
 | Episodes  | Score min | Score max | Score avg | Steps avg | Epsilon |
@@ -33,6 +34,7 @@
 - buffer_capacity: 10,000
 - target_update_freq: 100
 - episodes: 1500
+- reward: +10 if eaten, -0.1 per step, -10 if die
 
 **Results**
 | Episodes  | Score min | Score max | Score avg | Steps avg | Epsilon |
@@ -68,6 +70,7 @@
 - buffer_capacity: 10,000
 - target_update_freq: 100
 - episodes: 1500
+- reward: +10 if eaten, -0.1 per step, -10 if die
 
 **Results** (every 100 episodes)
 | Episodes  | Score min | Score max | Score avg | Steps avg | Epsilon |
@@ -103,7 +106,7 @@
 - buffer_capacity: 10,000
 - target_update_freq: 100
 - episodes: 1500
-- reward shaping: +0.1 if moving closer to food, -0.1 if moving away
+- reward: +10 if eaten, +0.1 if moving closer to food, -0.1 if moving away, -10 if die
 
 **Results** (every 100 episodes)
 | Episodes  | Score min | Score max | Score avg | Steps avg | Epsilon |
@@ -140,7 +143,7 @@
 - buffer_capacity: 10,000
 - target_update_freq: 100
 - episodes: 1500
-- **BUG** reward shaping: -0.5 if moving closer to food, +0.2 if moving away
+- reward: +10 if eaten, **BUG** -0.5 if moving closer to food, +0.2 if moving away, -10 if die
 
 **Results** (every 100 episodes)
 | Episodes  | Score min | Score max | Score avg | Steps avg | Epsilon |
@@ -176,8 +179,7 @@
 - buffer_capacity: 10,000
 - target_update_freq: 100
 - episodes: 1500
-- reward shaping: +0.2 if moving closer to food, -0.5 if moving away (bug fixed from Exp 4)
-
+- reward: +10 if eaten, **FIX** +0.2 if moving closer to food, -0.5 if moving away, -10 if die
 **Results** (every 100 episodes)
 | Episodes  | Score min | Score max | Score avg | Steps avg | Epsilon |
 |-----------|-----------|-----------|-----------|-----------|---------|
@@ -212,7 +214,7 @@
 - buffer_capacity: 10,000
 - target_update_freq: 100
 - episodes: 3000 (loaded from exp_5.pth, continued from ep 1500)
-- reward shaping: +0.2 if moving closer to food, -0.5 if moving away
+- reward: +10 if eaten, +0.2 if moving closer to food, -0.5 if moving away, -10 if die
 
 **Results** (every 100 episodes)
 | Episodes  | Score min | Score max | Score avg | Steps avg | Epsilon |
@@ -249,7 +251,7 @@
 - buffer_capacity: 10,000
 - target_update_freq: 100
 - episodes: 3000 (loaded from exp_2.pth, continued from ep 1500)
-- No reward shaping
+- reward: +10 if eaten, -0.1 per step, -10 if die
 
 **Results** (every 100 episodes)
 | Episodes  | Score min | Score max | Score avg | Steps avg | Epsilon |
@@ -286,7 +288,7 @@
 - target_update_freq: 100
 - episodes: 3000 (fresh training, no loaded model)
 - step limit: step_max = 100 + 50 * score (dynamic)
-- No reward shaping
+- reward: +10 if eaten, -0.1 per step, -10 if die
 
 **Results** (every 100 episodes)
 | Episodes  | Score min | Score max | Score avg | Steps avg | Epsilon |
@@ -338,7 +340,7 @@
 - target_update_freq: 100
 - episodes: 3000 (fresh training, no loaded model)
 - step limit: step_max = 100 + 50 * score (dynamic)
-- No reward shaping
+- reward: +10 if eaten, -0.1 per step, -10 if die
 
 **Results** (every 100 episodes)
 | Episodes  | Score min | Score max | Score avg | Steps avg | Epsilon |
@@ -431,3 +433,56 @@
 
 **Choice for next experiment** 
     Lower the eating reward till 10 again, but we punish more the dying reward till -25, so the relation between eat:die is 1:2.5.
+
+### Experiment 11 — 2026-05-27
+**Hyperparameters**
+- epsilon_start: 1.0 / epsilon_end: 0.05 / epsilon_decay: 0.99995
+- gamma: 0.60
+- lr: 1e-3
+- batch_size: 64
+- buffer_capacity: 10,000
+- target_update_freq: 100
+- episodes: 3000 (fresh training, no loaded model)
+- step limit: step_max = 100 + 50 * score (dynamic)
+- reward: +10 if eaten, -0.1 per step, -25 if die
+
+**Results** (every 100 episodes)
+| Episodes  | Score min | Score max | Score avg | Steps avg | Epsilon |
+|-----------|-----------|-----------|-----------|-----------|---------|
+| 100       | 0         | 2         | 0.1       | 34.3      | ~0.841  |
+| 200       | 0         | 3         | 0.1       | 35.5      | ~0.701  |
+| 300       | 0         | 1         | 0.1       | 30.3      | ~0.599  |
+| 400       | 0         | 1         | 0.1       | 37.8      | ~0.494  |
+| 500       | 0         | 1         | 0.1       | 38.0      | ~0.406  |
+| 600       | 0         | 2         | 0.2       | 38.4      | ~0.334  |
+| 700       | 0         | 3         | 0.2       | 42.7      | ~0.268  |
+| 800       | 0         | 2         | 0.2       | 54.5      | ~0.203  |
+| 900       | 0         | 2         | 0.2       | 46.2      | ~0.161  |
+| 1000      | 0         | 4         | 0.3       | 63.0      | ~0.117  |
+| 1100      | 0         | 3         | 0.4       | 84.4      | ~0.076  |
+| 1200      | 0         | 3         | 0.3       | 81.0      | ~0.051  |
+| 1300      | 0         | 3         | 0.4       | 86.8      | ~0.05   |
+| 1400      | 0         | 4         | 0.6       | 97.0      | ~0.05   |
+| 1500      | 0         | 4         | 0.6       | 91.1      | ~0.05   |
+| 1600      | 0         | 4         | 0.7       | 97.8      | ~0.05   |
+| 1700      | 0         | 4         | 0.8       | 101.0     | ~0.05   |
+| 1800      | 0         | 5         | 0.9       | 100.5     | ~0.05   |
+| 1900      | 0         | 4         | 0.7       | 94.5      | ~0.05   |
+| 2000      | 0         | 4         | 0.8       | 92.1      | ~0.05   |
+| 2100      | 0         | 4         | 0.8       | 92.2      | ~0.05   |
+| 2200      | 0         | 4         | 0.8       | 96.6      | ~0.05   |
+| 2300      | 0         | 5         | 0.8       | 95.8      | ~0.05   |
+| 2400      | 0         | 4         | 0.9       | 100.3     | ~0.05   |
+| 2500      | 0         | 4         | 0.9       | 95.8      | ~0.05   |
+| 2600      | 0         | 5         | 1.1       | 100.3     | ~0.05   |
+| 2700      | 0         | 5         | 1.0       | 96.5      | ~0.05   |
+| 2800      | 0         | 5         | 1.1       | 101.0     | ~0.05   |
+| 2900      | 0         | 5         | 0.9       | 104.2     | ~0.05   |
+| 3000      | 0         | 6         | 1.2       | 95.3      | ~0.05   |
+
+**Observations**
+    We can see that we obtained the best result in score_avg and score_max so far. It tends to use the maximum steps available. Also, it learns better when epsilon stays at 0.05.
+
+**Choice for next experiment**
+    I would like to try this with a higher gamma, so the model considers farther foods. I'm going to change it to 0.9. Exp_12.
+    Otherwise, later I would like to adjust the death penalty a little more in order to find the value with the best results.

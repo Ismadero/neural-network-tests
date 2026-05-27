@@ -590,3 +590,55 @@
 
 **Choice for next experiment**
     Return to gamma = 0.6, but modifying the reward shaping, just like exp 3 but only rewarding when the model is closer than it has ever been to the current food in the episode, this may avoid looping.
+
+### Experiment 14 — 2026-05-27
+**Hyperparameters**
+- epsilon_start: 1.0 / epsilon_end: 0.05 / epsilon_decay: 0.99995
+- gamma: 0.60
+- lr: 1e-3
+- batch_size: 64
+- buffer_capacity: 10,000
+- target_update_freq: 100
+- episodes: 3000 (fresh training, no loaded model)
+- step limit: step_max = 100 + 50 * score (dynamic)
+- reward: +10 if eaten, -25 if die, +0.1 if closer to food than ever in episode, -0.1 otherwise
+
+**Results** (every 100 episodes)
+| Episodes  | Score min | Score max | Score avg | Steps avg | Epsilon |
+|-----------|-----------|-----------|-----------|-----------|---------|
+| 100       | 0         | 2         | 0.2       | 37.7      | ~0.827  |
+| 200       | 0         | 2         | 0.1       | 38.6      | ~0.678  |
+| 300       | 0         | 2         | 0.2       | 38.6      | ~0.557  |
+| 400       | 0         | 1         | 0.2       | 48.5      | ~0.435  |
+| 500       | 0         | 2         | 0.2       | 48.3      | ~0.340  |
+| 600       | 0         | 3         | 0.2       | 52.8      | ~0.260  |
+| 700       | 0         | 2         | 0.2       | 68.7      | ~0.184  |
+| 800       | 0         | 3         | 0.3       | 70.0      | ~0.129  |
+| 900       | 0         | 3         | 0.3       | 75.7      | ~0.088  |
+| 1000      | 0         | 3         | 0.5       | 91.6      | ~0.056  |
+| 1100      | 0         | 2         | 0.5       | 99.1      | ~0.05   |
+| 1200      | 0         | 3         | 0.7       | 97.5      | ~0.05   |
+| 1300      | 0         | 4         | 0.7       | 89.4      | ~0.05   |
+| 1400      | 0         | 3         | 0.6       | 88.3      | ~0.05   |
+| 1500      | 0         | 4         | 0.8       | 90.2      | ~0.05   |
+| 1600      | 0         | 4         | 0.7       | 99.0      | ~0.05   |
+| 1700      | 0         | 2         | 0.4       | 72.6      | ~0.05   |
+| 1800      | 0         | 3         | 0.4       | 79.9      | ~0.05   |
+| 1900      | 0         | 3         | 0.5       | 76.5      | ~0.05   |
+| 2000      | 0         | 2         | 0.5       | 86.7      | ~0.05   |
+| 2100      | 0         | 3         | 0.5       | 83.4      | ~0.05   |
+| 2200      | 0         | 3         | 0.4       | 79.2      | ~0.05   |
+| 2300      | 0         | 3         | 0.5       | 88.4      | ~0.05   |
+| 2400      | 0         | 6         | 0.5       | 92.8      | ~0.05   |
+| 2500      | 0         | 4         | 0.5       | 75.5      | ~0.05   |
+| 2600      | 0         | 4         | 0.8       | 97.8      | ~0.05   |
+| 2700      | 0         | 5         | 0.6       | 90.4      | ~0.05   |
+| 2800      | 0         | 4         | 0.6       | 89.7      | ~0.05   |
+| 2900      | 0         | 3         | 0.8       | 91.9      | ~0.05   |
+| 3000      | 0         | 4         | 0.6       | 93.9      | ~0.05   |
+
+**Observations**
+    Although the score avg didn't reach 1, score max reaches the same highest value as experiment 11, and the step average is slightly lower than what we saw in exp 11. According to the evaluation, we can appreciate that it tends to get closer to food instead of going anywhere like it used to in experiment 11.
+
+**Choice for next experiment**
+    Because the model seems to behave erratically most of the time, I would add a 4th channel to the tensor given to the network indicating the actual direction of the snake. And I will run this same experiment with that 4th channel.

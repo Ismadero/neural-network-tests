@@ -17,6 +17,7 @@ class Game:
         self.score = scorelib.Score()
         self.render = render
         self.steps = 0
+        self.lower_distance_to_food = 0
         if self.render:
             self.screen = screen.Screen()
 
@@ -28,6 +29,8 @@ class Game:
         self.food = foodlib.Food(occupied_aux, constants.FOOD_AMOUNT)
 
         self.snake = snakelib.Snake()
+
+        self.lower_distance_to_food = self.get_distance_to_food()
 
     def run(self):
         """Run the main game loop until the player loses or closes the window."""
@@ -85,25 +88,14 @@ class Game:
             self.running = False
             return self.get_state(), -25, True
 
+        next_dist = self.get_distance_to_food(next=True)
+        if self.lower_distance_to_food > next_dist:
+            reward = 0.1
+            self.lower_distance_to_food = next_dist
+        else:
+            reward = -0.1
+            
         next_coord = self.snake.get_next_coord()
-        
-        #head = self.snake.get_head()
-        #foods = self.food.get_foods()
-        #
-        #head_dist = min(
-        #    head.distance_squared_to(pygame.Vector2(food[0], food[1])) 
-        #    for food in foods)
-        #
-        #next_dist = min(
-        #    next_coord.distance_squared_to(pygame.Vector2(food[0], food[1])) 
-        #    for food in foods)
-        #
-        #if head_dist >= next_dist:
-        #    reward = 0.2
-        #else:
-        #    reward = -0.5
-
-        reward = (-0.1)
 
         next_coord = (int(next_coord.x), int(next_coord.y))
         has_eaten = self.food.eat_food(next_coord)
@@ -114,6 +106,7 @@ class Game:
             self.food.new_food(occupied_aux, 1)
             self.score.add_point()
             reward = 10
+            self.lower_distance_to_food = self.get_distance_to_food()
 
         if self.render:
             self.screen.update(self.snake.get_occupied(), self.snake.get_head(), self.food.get_foods())
@@ -155,3 +148,16 @@ class Game:
         final_score = self.score.get_score()
         achievable_score = self.score.max_achievable()
         return (final_score, achievable_score, time)
+    
+    def get_distance_to_food(self, next = False):
+        """Returns the lower distance from the head or the next_coord to food"""
+        if next:
+            coord = self.snake.get_next_coord()
+        else:
+            coord = self.snake.get_head()
+        coord = (coord.x, coord.y)
+        foods = self.food.get_foods()
+        return min(
+            abs(coord[0] - food[0]) + abs(coord[1] - food[1])
+            for food in foods)
+        

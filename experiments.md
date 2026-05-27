@@ -538,3 +538,55 @@
 
 **Choice for next experiment**
     First I will try with lower gamma values i.e. 0.4.
+
+### Experiment 13 — 2026-05-27
+**Hyperparameters**
+- epsilon_start: 1.0 / epsilon_end: 0.05 / epsilon_decay: 0.99995
+- gamma: 0.40
+- lr: 1e-3
+- batch_size: 64
+- buffer_capacity: 10,000
+- target_update_freq: 100
+- episodes: 3000 (fresh training, no loaded model)
+- step limit: step_max = 100 + 50 * score (dynamic)
+- reward: +10 if eaten, -0.1 per step, -25 if die
+
+**Results** (every 100 episodes)
+| Episodes  | Score min | Score max | Score avg | Steps avg | Epsilon |
+|-----------|-----------|-----------|-----------|-----------|---------|
+| 100       | 0         | 2         | 0.1       | 36.3      | ~0.833  |
+| 200       | 0         | 1         | 0.1       | 37.8      | ~0.686  |
+| 300       | 0         | 1         | 0.1       | 35.3      | ~0.572  |
+| 400       | 0         | 1         | 0.1       | 33.8      | ~0.481  |
+| 500       | 0         | 2         | 0.2       | 32.8      | ~0.406  |
+| 600       | 0         | 2         | 0.1       | 35.4      | ~0.339  |
+| 700       | 0         | 2         | 0.2       | 44.4      | ~0.270  |
+| 800       | 0         | 3         | 0.3       | 51.1      | ~0.208  |
+| 900       | 0         | 2         | 0.2       | 54.3      | ~0.158  |
+| 1000      | 0         | 2         | 0.3       | 67.1      | ~0.113  |
+| 1100      | 0         | 3         | 0.4       | 78.6      | ~0.076  |
+| 1200      | 0         | 2         | 0.4       | 85.9      | ~0.05   |
+| 1300      | 0         | 2         | 0.4       | 89.7      | ~0.05   |
+| 1400      | 0         | 3         | 0.3       | 82.4      | ~0.05   |
+| 1500      | 0         | 3         | 0.6       | 93.3      | ~0.05   |
+| 1600      | 0         | 2         | 0.5       | 86.1      | ~0.05   |
+| 1700      | 0         | 4         | 0.7       | 85.7      | ~0.05   |
+| 1800      | 0         | 5         | 0.7       | 88.8      | ~0.05   |
+| 1900      | 0         | 4         | 0.8       | 95.3      | ~0.05   |
+| 2000      | 0         | 5         | 0.7       | 93.5      | ~0.05   |
+| 2100      | 0         | 4         | 0.7       | 96.7      | ~0.05   |
+| 2200      | 0         | 4         | 0.9       | 95.5      | ~0.05   |
+| 2300      | 0         | 4         | 0.8       | 89.4      | ~0.05   |
+| 2400      | 0         | 4         | 0.8       | 90.9      | ~0.05   |
+| 2500      | 0         | 5         | 0.7       | 94.0      | ~0.05   |
+| 2600      | 0         | 5         | 0.8       | 97.7      | ~0.05   |
+| 2700      | 0         | 5         | 0.9       | 94.8      | ~0.05   |
+| 2800      | 0         | 5         | 1.0       | 103.1     | ~0.05   |
+| 2900      | 0         | 4         | 1.0       | 99.1      | ~0.05   |
+| 3000      | 0         | 6         | 1.0       | 102.1     | ~0.05   |
+
+**Observations**
+    We can observe a similar behavior as experiment 11 with gamma = 0.6, in this case it reaches lower values in score_avg, and when evaluated it tends to loop more than experiment 11.
+
+**Choice for next experiment**
+    Return to gamma = 0.6, but modifying the reward shaping, just like exp 3 but only rewarding when the model is closer than it has ever been to the current food in the episode, this may avoid looping.

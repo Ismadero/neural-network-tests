@@ -486,3 +486,55 @@
 **Choice for next experiment**
     I would like to try this with a higher gamma, so the model considers farther foods. I'm going to change it to 0.9. Exp_12.
     Otherwise, later I would like to adjust the death penalty a little more in order to find the value with the best results.
+
+### Experiment 12 — 2026-05-27
+**Hyperparameters**
+- epsilon_start: 1.0 / epsilon_end: 0.05 / epsilon_decay: 0.99995
+- gamma: 0.90
+- lr: 1e-3
+- batch_size: 64
+- buffer_capacity: 10,000
+- target_update_freq: 100
+- episodes: 3000 (fresh training, no loaded model)
+- step limit: step_max = 100 + 50 * score (dynamic)
+- reward: +10 if eaten, -0.1 per step, -25 if die
+
+**Results** (every 100 episodes)
+| Episodes  | Score min | Score max | Score avg | Steps avg | Epsilon |
+|-----------|-----------|-----------|-----------|-----------|---------|
+| 100       | 0         | 2         | 0.1       | 36.3      | ~0.833  |
+| 200       | 0         | 1         | 0.1       | 35.8      | ~0.693  |
+| 300       | 0         | 1         | 0.1       | 38.7      | ~0.568  |
+| 400       | 0         | 2         | 0.2       | 38.7      | ~0.466  |
+| 500       | 0         | 1         | 0.1       | 36.0      | ~0.387  |
+| 600       | 0         | 2         | 0.2       | 42.8      | ~0.311  |
+| 700       | 0         | 2         | 0.2       | 50.0      | ~0.241  |
+| 800       | 0         | 1         | 0.2       | 50.5      | ~0.187  |
+| 900       | 0         | 1         | 0.3       | 55.7      | ~0.141  |
+| 1000      | 0         | 2         | 0.3       | 63.6      | ~0.102  |
+| 1100      | 0         | 2         | 0.3       | 70.8      | ~0.071  |
+| 1200      | 0         | 2         | 0.3       | 61.7      | ~0.052  |
+| 1300      | 0         | 1         | 0.2       | 71.6      | ~0.05   |
+| 1400      | 0         | 3         | 0.3       | 71.4      | ~0.05   |
+| 1500      | 0         | 3         | 0.3       | 65.3      | ~0.05   |
+| 1600      | 0         | 2         | 0.3       | 76.5      | ~0.05   |
+| 1700      | 0         | 2         | 0.3       | 76.4      | ~0.05   |
+| 1800      | 0         | 4         | 0.4       | 76.7      | ~0.05   |
+| 1900      | 0         | 4         | 0.4       | 76.9      | ~0.05   |
+| 2000      | 0         | 3         | 0.3       | 77.1      | ~0.05   |
+| 2100      | 0         | 3         | 0.4       | 77.6      | ~0.05   |
+| 2200      | 0         | 2         | 0.3       | 69.4      | ~0.05   |
+| 2300      | 0         | 3         | 0.2       | 73.5      | ~0.05   |
+| 2400      | 0         | 3         | 0.4       | 72.8      | ~0.05   |
+| 2500      | 0         | 3         | 0.5       | 80.8      | ~0.05   |
+| 2600      | 0         | 2         | 0.3       | 76.5      | ~0.05   |
+| 2700      | 0         | 4         | 0.5       | 71.0      | ~0.05   |
+| 2800      | 0         | 4         | 0.5       | 69.0      | ~0.05   |
+| 2900      | 0         | 4         | 0.3       | 68.0      | ~0.05   |
+| 3000      | 0         | 3         | 0.5       | 72.9      | ~0.05   |
+
+**Observations**
+    In this case we can appreciate a worse performance compared to the previous exp, both in survival time as well as in score avg. This happens because the model is not correct in its calibration yet, for a higher gamma it needs a training that has good results before apply the higher values, that's why we should set a dynamic gamma that grows as the model learns and get bigger snake sizes.  
+
+**Choice for next experiment**
+    First I will try with lower gamma values i.e. 0.4.

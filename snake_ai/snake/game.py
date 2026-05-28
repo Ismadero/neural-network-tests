@@ -29,7 +29,7 @@ class Game:
 
         self.snake = snakelib.Snake()
 
-        #self.lower_distance_to_food = self.get_distance_to_food()
+        self.lower_distance_to_food = self.get_distance_to_food()
 
     def run(self):
         """Run the main game loop until the player loses or closes the window."""
@@ -87,13 +87,12 @@ class Game:
             self.running = False
             return self.get_state(), -25, True
 
-        #next_dist = self.get_distance_to_food(next=True)
-        #if self.lower_distance_to_food > next_dist:
-        #    reward = 0.1
-        #    self.lower_distance_to_food = next_dist
-        #else:
-        #    reward = -0.1
-        reward = -0.1    
+        next_dist = self.get_distance_to_food(next=True)
+        if self.lower_distance_to_food > next_dist:
+            reward = 0.1
+            self.lower_distance_to_food = next_dist
+        else:
+            reward = -0.1
         next_coord = self.snake.get_next_coord()
 
         next_coord = (int(next_coord.x), int(next_coord.y))
@@ -105,7 +104,7 @@ class Game:
             self.food.new_food(occupied_aux, 1)
             self.score.add_point()
             reward = 10
-            #self.lower_distance_to_food = self.get_distance_to_food()
+            self.lower_distance_to_food = self.get_distance_to_food()
 
         if self.render:
             self.screen.update(self.snake.get_occupied(), self.snake.get_head(), self.food.get_foods())

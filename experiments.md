@@ -748,3 +748,109 @@
 
 **Choice for next experiment**
     Return to the reward shaping seen in experiment 15, but modifying gamma a little higher (0.70) in order to see how it behaves.
+
+### Experiment 17 — 2026-05-28
+**Hyperparameters**
+- epsilon_start: 1.0 / epsilon_end: 0.05 / epsilon_decay: 0.99995
+- gamma: 0.70
+- lr: 1e-3
+- batch_size: 64
+- buffer_capacity: 10,000
+- target_update_freq: 100
+- episodes: 3000 (fresh training, no loaded model)
+- step limit: step_max = 100 + 50 * score (dynamic)
+- reward: +10 if eaten, -25 if die, +0.1 if closer to food than ever in episode, -0.1 otherwise
+- model input: CNN (3 channels) + direction one-hot (4,) concatenated at FC layer
+
+**Results** (every 100 episodes)
+| Episodes  | Score min | Score max | Score avg | Steps avg | Epsilon |
+|-----------|-----------|-----------|-----------|-----------|---------|
+| 100       | 0         | 2         | 0.2       | 35.7      | ~0.835  |
+| 200       | 0         | 1         | 0.2       | 38.0      | ~0.687  |
+| 300       | 0         | 2         | 0.2       | 42.1      | ~0.554  |
+| 400       | 0         | 2         | 0.1       | 47.2      | ~0.436  |
+| 500       | 0         | 1         | 0.2       | 49.4      | ~0.339  |
+| 600       | 0         | 1         | 0.3       | 50.9      | ~0.262  |
+| 700       | 0         | 2         | 0.3       | 48.3      | ~0.205  |
+| 800       | 0         | 1         | 0.2       | 60.5      | ~0.151  |
+| 900       | 0         | 3         | 0.4       | 67.3      | ~0.107  |
+| 1000      | 0         | 3         | 0.4       | 75.1      | ~0.073  |
+| 1100      | 0         | 2         | 0.5       | 83.4      | ~0.05   |
+| 1200      | 0         | 3         | 0.4       | 81.6      | ~0.05   |
+| 1300      | 0         | 3         | 0.6       | 87.1      | ~0.05   |
+| 1400      | 0         | 2         | 0.4       | 85.6      | ~0.05   |
+| 1500      | 0         | 3         | 0.5       | 87.9      | ~0.05   |
+| 1600      | 0         | 2         | 0.6       | 90.1      | ~0.05   |
+| 1700      | 0         | 3         | 0.6       | 84.2      | ~0.05   |
+| 1800      | 0         | 5         | 0.9       | 93.0      | ~0.05   |
+| 1900      | 0         | 4         | 0.8       | 102.3     | ~0.05   |
+| 2000      | 0         | 3         | 0.5       | 84.5      | ~0.05   |
+| 2100      | 0         | 3         | 0.5       | 85.3      | ~0.05   |
+| 2200      | 0         | 3         | 0.7       | 92.2      | ~0.05   |
+| 2300      | 0         | 4         | 0.6       | 97.5      | ~0.05   |
+| 2400      | 0         | 3         | 0.6       | 87.5      | ~0.05   |
+| 2500      | 0         | 4         | 0.7       | 96.1      | ~0.05   |
+| 2600      | 0         | 3         | 0.6       | 89.7      | ~0.05   |
+| 2700      | 0         | 3         | 0.6       | 88.7      | ~0.05   |
+| 2800      | 0         | 3         | 0.6       | 86.5      | ~0.05   |
+| 2900      | 0         | 4         | 0.8       | 94.0      | ~0.05   |
+| 3000      | 0         | 4         | 0.7       | 98.5      | ~0.05   |
+
+**Observations**
+    Increasing gamma caused the model to learn more slowly than what we have seen in experiment 15. Thus gamma should stay lower than 0.70 for initial training.
+
+**Choice for next experiment**
+    Train with gamma 0.50 in order to test lower gammas.
+
+### Experiment 18 — 2026-05-28
+**Hyperparameters**
+- epsilon_start: 1.0 / epsilon_end: 0.05 / epsilon_decay: 0.99995
+- gamma: 0.50
+- lr: 1e-3
+- batch_size: 64
+- buffer_capacity: 10,000
+- target_update_freq: 100
+- episodes: 3000 (fresh training, no loaded model)
+- step limit: step_max = 100 + 50 * score (dynamic)
+- reward: +10 if eaten, -25 if die, +0.1 if closer to food than ever in episode, -0.1 otherwise
+- model input: CNN (3 channels) + direction one-hot (4,) concatenated at FC layer
+
+**Results** (every 100 episodes)
+| Episodes  | Score min | Score max | Score avg | Steps avg | Epsilon |
+|-----------|-----------|-----------|-----------|-----------|---------|
+| 100       | 0         | 1         | 0.1       | 38.2      | ~0.825  |
+| 200       | 0         | 1         | 0.1       | 38.6      | ~0.677  |
+| 300       | 0         | 1         | 0.1       | 41.2      | ~0.548  |
+| 400       | 0         | 1         | 0.1       | 40.9      | ~0.445  |
+| 500       | 0         | 2         | 0.2       | 37.0      | ~0.368  |
+| 600       | 0         | 2         | 0.2       | 44.2      | ~0.294  |
+| 700       | 0         | 2         | 0.1       | 41.9      | ~0.237  |
+| 800       | 0         | 2         | 0.2       | 52.3      | ~0.182  |
+| 900       | 0         | 2         | 0.2       | 56.9      | ~0.136  |
+| 1000      | 0         | 2         | 0.2       | 65.8      | ~0.098  |
+| 1100      | 0         | 4         | 0.4       | 77.1      | ~0.066  |
+| 1200      | 0         | 3         | 0.4       | 86.8      | ~0.05   |
+| 1300      | 0         | 3         | 0.3       | 87.6      | ~0.05   |
+| 1400      | 0         | 2         | 0.4       | 81.4      | ~0.05   |
+| 1500      | 0         | 2         | 0.4       | 82.9      | ~0.05   |
+| 1600      | 0         | 2         | 0.4       | 83.0      | ~0.05   |
+| 1700      | 0         | 2         | 0.3       | 89.5      | ~0.05   |
+| 1800      | 0         | 3         | 0.5       | 80.9      | ~0.05   |
+| 1900      | 0         | 4         | 0.5       | 84.5      | ~0.05   |
+| 2000      | 0         | 5         | 0.7       | 86.2      | ~0.05   |
+| 2100      | 0         | 3         | 0.7       | 88.5      | ~0.05   |
+| 2200      | 0         | 4         | 0.8       | 89.0      | ~0.05   |
+| 2300      | 0         | 6         | 0.7       | 83.6      | ~0.05   |
+| 2400      | 0         | 4         | 0.9       | 91.0      | ~0.05   |
+| 2500      | 0         | 4         | 0.8       | 93.8      | ~0.05   |
+| 2600      | 0         | 4         | 0.8       | 88.2      | ~0.05   |
+| 2700      | 0         | 4         | 1.0       | 93.8      | ~0.05   |
+| 2800      | 0         | 6         | 1.0       | 89.6      | ~0.05   |
+| 2900      | 0         | 6         | 1.2       | 95.1      | ~0.05   |
+| 3000      | 0         | 5         | 1.0       | 90.6      | ~0.05   |
+
+**Observations**
+    Using gamma 0.50 also causes slow training, similar to gamma 0.70, but it gives better results. Anyway, the sweet spot of gamma is around 0.60.
+
+**Choice for next experiment**
+    I will take the result model made in experiment 15, copy its hyperparameters, and continue training it until it reaches 5000 episodes in order to see where the learning limit is for the current state.

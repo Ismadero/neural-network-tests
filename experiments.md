@@ -695,3 +695,56 @@
 
 **Choice for next experiment**
     Replicate experiment 11 with this new neural network architecture.
+
+### Experiment 16 — 2026-05-28
+**Hyperparameters**
+- epsilon_start: 1.0 / epsilon_end: 0.05 / epsilon_decay: 0.99995
+- gamma: 0.60
+- lr: 1e-3
+- batch_size: 64
+- buffer_capacity: 10,000
+- target_update_freq: 100
+- episodes: 3000 (fresh training, no loaded model)
+- step limit: step_max = 100 + 50 * score (dynamic)
+- reward: +10 if eaten, -0.1 per step, -25 if die
+- model input: CNN (3 channels) + direction one-hot (4,) concatenated at FC layer
+
+**Results** (every 100 episodes)
+| Episodes  | Score min | Score max | Score avg | Steps avg | Epsilon |
+|-----------|-----------|-----------|-----------|-----------|---------|
+| 100       | 0         | 2         | 0.1       | 39.6      | ~0.819  |
+| 200       | 0         | 1         | 0.1       | 48.8      | ~0.639  |
+| 300       | 0         | 1         | 0.1       | 32.0      | ~0.542  |
+| 400       | 0         | 2         | 0.2       | 33.8      | ~0.455  |
+| 500       | 0         | 1         | 0.1       | 30.2      | ~0.390  |
+| 600       | 0         | 2         | 0.2       | 35.5      | ~0.325  |
+| 700       | 0         | 1         | 0.1       | 36.8      | ~0.269  |
+| 800       | 0         | 2         | 0.2       | 47.2      | ~0.211  |
+| 900       | 0         | 2         | 0.2       | 49.2      | ~0.165  |
+| 1000      | 0         | 3         | 0.3       | 56.2      | ~0.124  |
+| 1100      | 0         | 2         | 0.3       | 68.0      | ~0.088  |
+| 1200      | 0         | 3         | 0.3       | 65.4      | ~0.063  |
+| 1300      | 0         | 3         | 0.3       | 71.0      | ~0.05   |
+| 1400      | 0         | 3         | 0.3       | 78.7      | ~0.05   |
+| 1500      | 0         | 3         | 0.4       | 89.1      | ~0.05   |
+| 1600      | 0         | 4         | 0.5       | 80.2      | ~0.05   |
+| 1700      | 0         | 3         | 0.3       | 82.4      | ~0.05   |
+| 1800      | 0         | 3         | 0.4       | 85.5      | ~0.05   |
+| 1900      | 0         | 3         | 0.5       | 80.8      | ~0.05   |
+| 2000      | 0         | 2         | 0.3       | 76.9      | ~0.05   |
+| 2100      | 0         | 2         | 0.3       | 80.1      | ~0.05   |
+| 2200      | 0         | 3         | 0.4       | 86.0      | ~0.05   |
+| 2300      | 0         | 4         | 0.4       | 87.0      | ~0.05   |
+| 2400      | 0         | 3         | 0.5       | 92.6      | ~0.05   |
+| 2500      | 0         | 2         | 0.5       | 84.5      | ~0.05   |
+| 2600      | 0         | 3         | 0.3       | 79.0      | ~0.05   |
+| 2700      | 0         | 3         | 0.5       | 85.3      | ~0.05   |
+| 2800      | 0         | 2         | 0.3       | 77.1      | ~0.05   |
+| 2900      | 0         | 3         | 0.3       | 76.7      | ~0.05   |
+| 3000      | 0         | 2         | 0.2       | 85.8      | ~0.05   |
+
+**Observations**
+    In this case, without the distance-based reward shaping, we can observe that the model does not learn properly, the score_avg and score_max both are poor compared to the experiments 11 and 15, curious observation about exp 11, not expected because that experiment gave us the better results at that moment, this indicates that the new architecture may behave different in experiments done with the previous one.
+
+**Choice for next experiment**
+    Return to the reward shaping seen in experiment 15, but modifying gamma a little higher (0.70) in order to see how it behaves.

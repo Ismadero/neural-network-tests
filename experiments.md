@@ -642,3 +642,56 @@
 
 **Choice for next experiment**
     Because the model seems to behave erratically most of the time, I would add a 4th channel to the tensor given to the network indicating the actual direction of the snake. And I will run this same experiment with that 4th channel.
+
+### Experiment 15 — 2026-05-27
+**Hyperparameters**
+- epsilon_start: 1.0 / epsilon_end: 0.05 / epsilon_decay: 0.99995
+- gamma: 0.60
+- lr: 1e-3
+- batch_size: 64
+- buffer_capacity: 10,000
+- target_update_freq: 100
+- episodes: 3000 (fresh training, no loaded model)
+- step limit: step_max = 100 + 50 * score (dynamic)
+- reward: +10 if eaten, -25 if die, +0.1 if closer to food than ever in episode, -0.1 otherwise
+- model input: CNN (3 channels) + direction one-hot (4,) concatenated at FC layer
+
+**Results** (every 100 episodes)
+| Episodes  | Score min | Score max | Score avg | Steps avg | Epsilon |
+|-----------|-----------|-----------|-----------|-----------|---------|
+| 100       | 0         | 2         | 0.1       | 38.8      | ~0.823  |
+| 200       | 0         | 2         | 0.2       | 40.9      | ~0.667  |
+| 300       | 0         | 1         | 0.2       | 37.9      | ~0.549  |
+| 400       | 0         | 2         | 0.2       | 43.3      | ~0.440  |
+| 500       | 0         | 2         | 0.2       | 50.5      | ~0.341  |
+| 600       | 0         | 1         | 0.2       | 57.5      | ~0.254  |
+| 700       | 0         | 2         | 0.4       | 60.4      | ~0.187  |
+| 800       | 0         | 2         | 0.4       | 63.4      | ~0.136  |
+| 900       | 0         | 4         | 0.6       | 70.2      | ~0.095  |
+| 1000      | 0         | 3         | 0.5       | 76.4      | ~0.065  |
+| 1100      | 0         | 3         | 0.8       | 89.0      | ~0.05   |
+| 1200      | 0         | 5         | 0.8       | 96.1      | ~0.05   |
+| 1300      | 0         | 4         | 1.1       | 104.9     | ~0.05   |
+| 1400      | 0         | 5         | 1.3       | 111.9     | ~0.05   |
+| 1500      | 0         | 5         | 1.0       | 90.8      | ~0.05   |
+| 1600      | 0         | 5         | 1.3       | 106.5     | ~0.05   |
+| 1700      | 0         | 5         | 1.0       | 85.6      | ~0.05   |
+| 1800      | 0         | 4         | 0.9       | 81.2      | ~0.05   |
+| 1900      | 0         | 5         | 1.0       | 93.2      | ~0.05   |
+| 2000      | 0         | 4         | 1.0       | 91.7      | ~0.05   |
+| 2100      | 0         | 5         | 1.2       | 100.4     | ~0.05   |
+| 2200      | 0         | 6         | 1.0       | 88.6      | ~0.05   |
+| 2300      | 0         | 6         | 1.4       | 99.1      | ~0.05   |
+| 2400      | 0         | 7         | 1.4       | 114.5     | ~0.05   |
+| 2500      | 0         | 6         | 1.4       | 94.7      | ~0.05   |
+| 2600      | 0         | 7         | 1.6       | 103.7     | ~0.05   |
+| 2700      | 0         | 7         | 1.3       | 109.2     | ~0.05   |
+| 2800      | 0         | 7         | 1.5       | 107.8     | ~0.05   |
+| 2900      | 0         | 8         | 1.4       | 95.2      | ~0.05   |
+| 3000      | 0         | 8         | 1.6       | 106.8     | ~0.05   |
+
+**Observations**
+    We can observe an obvious improvement compared to previous experiments, reaching the best values ever — score max of 8 and score avg of 1.6. Adding the direction field greatly benefited learning, and it seems it was one of the biggest bottlenecks in the project.
+
+**Choice for next experiment**
+    Replicate experiment 11 with this new neural network architecture.

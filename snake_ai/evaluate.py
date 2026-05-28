@@ -34,10 +34,11 @@ if dir != "":
     game = gameLib.Game()
     try:
         while not done:
-            state = torch.tensor(game.get_state())
-            action = agent.select_action(state)
-            next_state = game.step(action)
-            done = next_state[2]
+            state = game.get_state()
+            direction = state[1]
+            action = agent.select_action(state, direction)
+            next_state_tuple, reward, done = game.step(action)
+            next_state, next_dir = next_state_tuple
             time.sleep(constants.MOVE_INTERVAL)
         results = game.quit()
         print("Score : " + str(results[0]) + "\n" +

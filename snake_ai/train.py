@@ -50,17 +50,21 @@ while episodes < episodes_max:
     try:
         #Loop that completes one episode (session of the game)
         while not done:
-            state = torch.tensor(game.get_state())
-            action = agent.select_action(state)
-            next_state = game.step(action)
+            state = game.get_state()
+            direction = state[1]
+            action = agent.select_action(state, direction)
+            next_state_tuple, reward, done_aux = game.step(action)
+            next_state, next_dir = next_state_tuple
             agent.store(state, 
-                        action, 
-                        next_state[1], 
-                        next_state[0], 
-                        next_state[2])
+                        action,
+                        direction,
+                        reward, 
+                        next_state,
+                        next_dir, 
+                        done_aux)
             agent.train_step()
             max_steps = 100 + 50*game.get_score()
-            done = next_state[2] or game.get_steps() >= max_steps
+            done = done_aux or game.get_steps() >= max_steps
 
 
         steps.append(game.get_steps())

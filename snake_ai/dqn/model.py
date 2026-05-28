@@ -15,7 +15,7 @@ class SnakeCNN(nn.Module):
             nn.MaxPool2d(2),
         )
 
-        conv_out = 32 * (rows // 2) * (cols // 2)
+        conv_out = 32 * (rows // 2) * (cols // 2) + 4
 
         self.fc = nn.Sequential(
             nn.Linear(conv_out, 128),
@@ -23,7 +23,7 @@ class SnakeCNN(nn.Module):
             nn.Linear(128, n_actions),
         )
 
-    def forward(self, x):
+    def forward(self, x, direction):
         """
         Executes the forward flow for a given tensor
         Args:
@@ -35,4 +35,5 @@ class SnakeCNN(nn.Module):
         """
         x = self.conv(x)
         x = x.view(x.size(0), -1)
+        x = torch.cat([x, direction], dim=1)
         return self.fc(x)

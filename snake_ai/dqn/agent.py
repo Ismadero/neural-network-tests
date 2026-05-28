@@ -14,17 +14,19 @@ class ReplayBuffer:
     def __init__(self, capacity):
         self.buffer = deque(maxlen=capacity)
 
-    def push(self, state, action, reward, next_state, done):
-        self.buffer.append((state, action, reward, next_state, done))
+    def push(self, state, action, direction, reward, next_state, next_direction, done):
+        self.buffer.append((state, action, direction, reward, next_state, next_direction, done))
 
     def sample(self, batch_size):
         batch = random.sample(self.buffer, batch_size)
-        states, actions, rewards, next_states, dones = zip(*batch)
+        states, actions, direction, rewards, next_states, next_direction, dones = zip(*batch)
         return (
             torch.stack(states),
             torch.tensor(actions),
+            torch.stack(direction),
             torch.tensor(rewards, dtype=torch.float32),
             torch.stack(next_states),
+            torch.stack(next_direction),
             torch.tensor(dones, dtype=torch.float32),
         )
 
@@ -57,32 +59,37 @@ class DQNAgent:
         self.loss_fn = nn.MSELoss()
         self.buffer = ReplayBuffer(buffer_capacity)
 
-    def select_action(self, state):
+    def select_action(self, state, direction):
         """Selects an action using epsilon-greedy: random action with probability epsilon,
         otherwise the action with the highest Q-value. Returns -1 (left), 0 (straight), 1 (right)."""
         if random.random() <= self.epsilon:
             return random.randint(-1, 1)
         else:
             with torch.no_grad():
-                return self.q_net(state.unsqueeze(0)).argmax().item() - 1
+                state = torch.tensor(state[0])
+                direction = torch.tensor(direction, dtype=torch.float32)
+                return self.q_net(state.unsqueeze(0), direction.unsqueeze(0)).argmax().item() - 1
 
-    def store(self, state, action, reward, next_state, done):
+    def store(self, state, action, direction, reward, next_state, next_dir, done):
         """Saves to the buffer state given"""
-        next_state = torch.tensor(next_state)
         action = action + 1
-        self.buffer.push(state, action, reward, next_state, done)
+        state = torch.tensor(state[0])
+        direction = torch.tensor(direction, dtype=torch.float32)
+        next_state = torch.tensor(next_state)
+        next_dir = torch.tensor(next_dir, dtype=torch.float32)
+        self.buffer.push(state, action, direction, reward, next_state, next_dir, done)
 
     def train_step(self):
         """Trains the network using the states known in buffer"""
         if len(self.buffer) < self.batch_size:
             return
 
-        states, actions, rewards, next_states, dones = self.buffer.sample(self.batch_size)
+        states, actions, direction, rewards, next_states, next_direction, dones = self.buffer.sample(self.batch_size)
 
-        current_q = self.q_net(states).gather(1, actions.unsqueeze(1)).squeeze(1)
+        current_q = self.q_net(states, direction).gather(1, actions.unsqueeze(1)).squeeze(1)
 
         with torch.no_grad():
-            next_q = self.target_net(next_states).max(1).values
+            next_q = self.target_net(next_states, next_direction).max(1).values
             target_q = rewards + self.gamma * next_q * (1 - dones)
 
         loss = self.loss_fn(current_q, target_q)

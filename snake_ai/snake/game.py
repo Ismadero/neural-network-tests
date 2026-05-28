@@ -115,13 +115,18 @@ class Game:
         return self.get_state(), reward, False
 
     def get_state(self):
-        """ Return the board as a (3, ROWS, COLUMS) float32 tensor
-        
-        Channel 0: snake body
-        
-        Channel 1: snake head
-        
-        Channel 2: food"""
+        """ Return the board as a tuple 
+        1st elem:
+            (3, ROWS, COLUMS) float32 tensor
+
+            Channel 0: snake body
+
+            Channel 1: snake head
+
+            Channel 2: food
+        2nd elem:
+            (4,) int
+            Indicates actual direction of the snake"""
         state = np.zeros((3, constants.ROWS, constants.COLUMNS), dtype=np.float32)
         body = self.snake.get_occupied()
         for occ in body:
@@ -131,7 +136,11 @@ class Game:
         foods = self.food.get_foods()
         for food in foods:
             state[2][food[1]][food[0]] = 1.0
-        return state
+        
+        direction = [0,0,0,0]
+        direction[self.snake.get_direction()] = 1
+        
+        return (state, direction)
 
     def get_steps(self):
         """Returns the amouns of steps made in game"""

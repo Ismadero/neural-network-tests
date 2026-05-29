@@ -132,7 +132,7 @@
 
 **Choice for next experiment**
     We will adjust the reward shaping to make moving away more punishing, or getting closer more rewarding, to discourage the circular looping behavior.
-    The changes are gonna be applied with the next values: +0.2 / -0.5
+    The changes will be applied with the following values: +0.2 / -0.5
 
 ### Experiment 4 — 2026-05-23
 **Hyperparameters**
@@ -165,10 +165,10 @@
 | 1500      | 0         | 1         | 0.3       | 323.3     | ~0.05   |
 
 **Observations**
-    In this case the model behaves rarely and it seems that it wants to be away from the food instead to get closer.
+    In this case the model behaves strangely and it seems that it wants to be away from the food instead to get closer.
 
 **Choice for next experiment**
-    It was a logic bug where i put the reward shaping inverted, in the next step im going to fix this and see new results. :)
+    It was a logic bug where I put the reward shaping inverted, in the next step I'm going to fix this and see new results. :)
 
 ### Experiment 5 — 2026-05-23
 **Hyperparameters**
@@ -273,10 +273,10 @@
 | 3000      | 0         | 3         | 0.8       | 308.1     | ~0.05   |
 
 **Observations**
-    In this case the growth of score avg is notorious but when evaulated we can see that the snake loops in circles most of the time, that explains the high steps avg.
+    In this case the growth of score avg is noticeable but when evaluated we can see that the snake loops in circles most of the time, that explains the high steps avg.
 
 **Choice for next experiment**
-    We will set an step limit per episode according to the next formule: step_max = 100 + 50 * score.
+    We will set a step limit per episode according to the next formula: step_max = 100 + 50 * score.
 
 ### Experiment 8 — 2026-05-23
 **Hyperparameters**
@@ -377,7 +377,7 @@
 | 3000      | 0         | 3         | 0.4       | 88.0      | ~0.05   |
 
 **Observations**
-    We can see a better growing in score_avg, with better results in score max. When evaluated the snake behaves less irregularly moving straighter.
+    We can see a better growth in score_avg, with better results in score max. When evaluated the snake behaves less irregularly moving straighter.
 
 **Choice for next experiment**
     Because the model eats little food, I decided to make the eating reward higher (50), thus it should make the model search for more food when running.
@@ -432,7 +432,7 @@
     We can observe that the step_avg keeps low values, same happens with the score_avg, this happens when higher eating rewards appears, the model looks to eat once and then die.
 
 **Choice for next experiment** 
-    Lower the eating reward till 10 again, but we punish more the dying reward till -25, so the relation between eat:die is 1:2.5.
+    Lower the eating reward till 10 again, but we increase the death penalty to -25, so the ratio between eat:die is 1:2.5.
 
 ### Experiment 11 — 2026-05-27
 **Hyperparameters**
@@ -484,7 +484,7 @@
     We can see that we obtained the best result in score_avg and score_max so far. It tends to use the maximum steps available. Also, it learns better when epsilon stays at 0.05.
 
 **Choice for next experiment**
-    I would like to try this with a higher gamma, so the model considers farther foods. I'm going to change it to 0.9. Exp_12.
+    I would like to try this with a higher gamma, so the model values future rewards more heavily. I'm going to change it to 0.9. Exp_12.
     Otherwise, later I would like to adjust the death penalty a little more in order to find the value with the best results.
 
 ### Experiment 12 — 2026-05-27
@@ -534,7 +534,7 @@
 | 3000      | 0         | 3         | 0.5       | 72.9      | ~0.05   |
 
 **Observations**
-    In this case we can appreciate a worse performance compared to the previous exp, both in survival time as well as in score avg. This happens because the model is not correct in its calibration yet, for a higher gamma it needs a training that has good results before apply the higher values, that's why we should set a dynamic gamma that grows as the model learns and get bigger snake sizes.  
+    In this case we can appreciate a worse performance compared to the previous exp, both in survival time as well as in score avg. This happens because the model is not correct in its calibration yet, for a higher gamma it needs a training that has good results before applying the higher values, that's why we should set a dynamic gamma that grows as the model learns and get bigger snake sizes.  
 
 **Choice for next experiment**
     First I will try with lower gamma values i.e. 0.4.
@@ -589,7 +589,7 @@
     We can observe a similar behavior as experiment 11 with gamma = 0.6, in this case it reaches lower values in score_avg, and when evaluated it tends to loop more than experiment 11.
 
 **Choice for next experiment**
-    Return to gamma = 0.6, but modifying the reward shaping, just like exp 3 but only rewarding when the model is closer than it has ever been to the current food in the episode, this may avoid looping.
+    Return to gamma = 0.6, but modify the reward shaping, just like exp 3 but only rewarding when the model is closer than it has ever been to the current food in the episode, this may avoid looping.
 
 ### Experiment 14 — 2026-05-27
 **Hyperparameters**
@@ -744,7 +744,7 @@
 | 3000      | 0         | 2         | 0.2       | 85.8      | ~0.05   |
 
 **Observations**
-    In this case, without the distance-based reward shaping, we can observe that the model does not learn properly, the score_avg and score_max both are poor compared to the experiments 11 and 15, curious observation about exp 11, not expected because that experiment gave us the better results at that moment, this indicates that the new architecture may behave different in experiments done with the previous one.
+    In this case, without the distance-based reward shaping, we can observe that the model does not learn properly, the score_avg and score_max both are poor compared to the experiments 11 and 15, curious observation about exp 11, not expected because that experiment gave us the better results at that moment, this indicates that the new architecture may behave differently in experiments done with the previous one.
 
 **Choice for next experiment**
     Return to the reward shaping seen in experiment 15, but modifying gamma a little higher (0.70) in order to see how it behaves.
@@ -854,3 +854,93 @@
 
 **Choice for next experiment**
     I will take the result model made in experiment 15, copy its hyperparameters, and continue training it until it reaches 5000 episodes in order to see where the learning limit is for the current state.
+
+---
+
+### Experiment 19 — 2026-05-28
+**Hyperparameters**
+- epsilon_start: 1.0 / epsilon_end: 0.05 / epsilon_decay: 0.99995
+- gamma: 0.60
+- lr: 1e-3
+- batch_size: 64
+- buffer_capacity: 10,000
+- target_update_freq: 100
+- episodes: 5000 (loaded model from exp_15, continued from episode 3000)
+- step limit: step_max = 100 + 50 * score (dynamic)
+- reward: +10 if eaten, -25 if die, +0.1 if closer to food than ever in episode, -0.1 otherwise
+- model input: CNN (3 channels) + direction one-hot (4,) concatenated at FC layer
+
+**Results** (every 100 episodes)
+| Episodes  | Score min | Score max | Score avg | Steps avg | Epsilon |
+|-----------|-----------|-----------|-----------|-----------|---------|
+| 3100      | 0         | 7         | 1.4       | 104.0     | ~0.05   |
+| 3200      | 0         | 5         | 1.5       | 110.1     | ~0.05   |
+| 3300      | 0         | 6         | 1.5       | 105.3     | ~0.05   |
+| 3400      | 0         | 6         | 1.6       | 108.5     | ~0.05   |
+| 3500      | 0         | 8         | 1.6       | 109.0     | ~0.05   |
+| 3600      | 0         | 8         | 1.5       | 122.2     | ~0.05   |
+| 3700      | 0         | 8         | 1.9       | 115.9     | ~0.05   |
+| 3800      | 0         | 5         | 1.5       | 114.2     | ~0.05   |
+| 3900      | 0         | 6         | 1.6       | 95.1      | ~0.05   |
+| 4000      | 0         | 8         | 1.9       | 114.1     | ~0.05   |
+| 4100      | 0         | 6         | 1.8       | 103.7     | ~0.05   |
+| 4200      | 0         | 8         | 1.7       | 118.5     | ~0.05   |
+| 4300      | 0         | 7         | 1.7       | 113.3     | ~0.05   |
+| 4400      | 0         | 7         | 1.8       | 117.5     | ~0.05   |
+| 4500      | 0         | 7         | 1.8       | 119.4     | ~0.05   |
+| 4600      | 0         | 10        | 1.9       | 116.0     | ~0.05   |
+| 4700      | 0         | 8         | 1.8       | 109.8     | ~0.05   |
+| 4800      | 0         | 6         | 1.9       | 114.2     | ~0.05   |
+| 4900      | 0         | 8         | 1.6       | 104.5     | ~0.05   |
+| 5000      | 0         | 7         | 1.7       | 114.7     | ~0.05   |
+
+**Observations**
+    We can observe that the model learns until near episode 3700, then score_avg tends to oscillate between 1.5 and 1.9, also we can see that steps avg stays around 100, that means that the snake doesn't survive longer, this is clearly a limit to the training.
+
+**Choice for next experiment**
+    In order to see beyond this point I will train this same model until episode 7000, hoping to see further improvement in score_avg.
+
+---
+
+### Experiment 20 — 2026-05-28
+**Hyperparameters**
+- epsilon_start: 1.0 / epsilon_end: 0.05 / epsilon_decay: 0.99995
+- gamma: 0.60
+- lr: 1e-3
+- batch_size: 64
+- buffer_capacity: 10,000
+- target_update_freq: 100
+- episodes: 7000 (loaded model from exp_19, continued from episode 5000)
+- step limit: step_max = 100 + 50 * score (dynamic)
+- reward: +10 if eaten, -25 if die, +0.1 if closer to food than ever in episode, -0.1 otherwise
+- model input: CNN (3 channels) + direction one-hot (4,) concatenated at FC layer
+
+**Results** (every 100 episodes)
+| Episodes  | Score min | Score max | Score avg | Steps avg | Epsilon |
+|-----------|-----------|-----------|-----------|-----------|---------|
+| 5100      | 0         | 7         | 1.7       | 103.6     | ~0.05   |
+| 5200      | 0         | 10        | 1.9       | 112.4     | ~0.05   |
+| 5300      | 0         | 8         | 1.9       | 131.1     | ~0.05   |
+| 5400      | 0         | 7         | 2.0       | 124.6     | ~0.05   |
+| 5500      | 0         | 9         | 1.6       | 109.7     | ~0.05   |
+| 5600      | 0         | 9         | 1.8       | 109.3     | ~0.05   |
+| 5700      | 0         | 8         | 1.6       | 108.7     | ~0.05   |
+| 5800      | 0         | 8         | 1.9       | 120.1     | ~0.05   |
+| 5900      | 0         | 6         | 1.6       | 109.2     | ~0.05   |
+| 6000      | 0         | 7         | 1.7       | 99.5      | ~0.05   |
+| 6100      | 0         | 7         | 1.7       | 106.9     | ~0.05   |
+| 6200      | 0         | 10        | 2.1       | 131.4     | ~0.05   |
+| 6300      | 0         | 7         | 1.9       | 106.5     | ~0.05   |
+| 6400      | 0         | 10        | 1.9       | 107.2     | ~0.05   |
+| 6500      | 0         | 8         | 2.0       | 131.4     | ~0.05   |
+| 6600      | 0         | 7         | 1.8       | 124.0     | ~0.05   |
+| 6700      | 0         | 9         | 1.4       | 113.7     | ~0.05   |
+| 6800      | 0         | 5         | 1.3       | 115.0     | ~0.05   |
+| 6900      | 0         | 6         | 1.1       | 102.4     | ~0.05   |
+| 7000      | 0         | 5         | 1.2       | 103.9     | ~0.05   |
+
+**Observations**
+    In this case it reaches score avg 2.1 in episode 6200, the best that we can obtain so far, after that the model tends to lower values with terrible behavior.
+
+**Choice for next experiment**
+    I would implement a prioritized experience replay.

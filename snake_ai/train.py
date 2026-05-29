@@ -21,7 +21,7 @@ columns = constants.COLUMNS
 
 model = None
 episodes = 0
-episodes_max = 3000
+episodes_max = 7000
 
 dir = sys.argv[1] if len(sys.argv) > 1 else ""
 

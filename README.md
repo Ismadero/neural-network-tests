@@ -8,11 +8,12 @@ A project to train a neural network to play Snake using **Deep Q-Learning (DQN)*
 
 Train an AI agent that learns to play Snake autonomously. The agent will use a DQN architecture where a CNN processes the game grid (as a 3-channel tensor) and outputs the optimal action at each step.
 
-Planned AI architecture:
+AI architecture (subject to change as experiments progress):
 - **Algorithm:** Deep Q-Network (DQN)
-- **Model:** CNN receiving a `(3, 15, 15)` state tensor (body, head, food channels)
+- **Model:** CNN receiving a `(3, 15, 15)` state tensor (body, head, food channels) + direction one-hot vector `(4,)` concatenated at the FC layer
 - **Actions:** 3 relative actions — go straight, turn left, turn right
-- **Rewards:** `+10` eat food · `-10` die · `-0.1` per step (avoids looping)
+- **Rewards:** `+10` eat food · `-25` die · `+0.1` new closest point to food ever in episode · `-0.1` otherwise
+- **Step limit:** dynamic — `step_max = 100 + 50 × score` (prevents looping)
 - **DQN components:** Q-network, target network, experience replay buffer, epsilon-greedy exploration
 
 ---
@@ -23,9 +24,17 @@ Planned AI architecture:
   - 15×15 grid
   - Keyboard arrow controls
   - Score tracking and session summary on exit
-- **DQN Agent** — fully trained with CNN, replay buffer, and epsilon-greedy exploration
-  - Training loop with model checkpointing
+- **DQN Agent** — fully trained with CNN + direction channel, replay buffer, and epsilon-greedy exploration
+  - Training loop with model checkpointing and resume from checkpoint
+  - Dynamic step limit per episode to penalize looping
   - Evaluation mode to watch the trained agent play
+- **20 experiments completed** — systematic hyperparameter search across reward shaping, gamma, epsilon decay, and model architecture
+  - Best result: **score avg 2.1, score max 10** (Experiment 20, episode 6200)
+  - Key findings:
+    - **gamma = 0.60** is the sweet spot — lower values loop more, higher values learn too slowly
+    - **distance-based reward shaping** (rewarding only when the snake reaches a new closest point to food within the episode) significantly reduced looping behavior
+    - **direction channel** (Exp 15) was the single biggest architectural improvement
+  - Training plateau identified around episode 6200 — next step: prioritized experience replay
 
 ---
 
@@ -67,10 +76,66 @@ Press `Ctrl+C` at any time to stop and save the model.
 ### 4. Watch the trained agent play
 
 ```bash
-python snake_ai/evaluate.py
+python snake_ai/evaluate.py <path/to/checkpoint.pth>
 ```
 
-Edit `model` in `evaluate.py` to point to your saved `.pth` file.
+Pass the path to any saved `.pth` checkpoint as the first argument.
+
+---
+
+## Architecture
+
+### CNN Model
+
+The input to the network is a `(3, 15, 15)` tensor representing the game grid as three binary channels:
+
+| Channel | Represents |
+|---------|------------|
+| 0       | Snake body |
+| 1       | Snake head |
+| 2       | Food       |
+
+This tensor is processed by two convolutional layers, then flattened and **concatenated with a direction one-hot vector** `(4,)` encoding the snake's current heading (UP, RIGHT, DOWN, LEFT) before passing through the fully connected layers:
+
+```
+Conv2d(3→16, 3×3) → ReLU → Conv2d(16→32, 3×3) → ReLU → MaxPool2d(2)
+    → Flatten → Concat(direction) → Linear(conv_out+4 → 128) → ReLU → Linear(128 → 3)
+```
+
+Output: 3 Q-values corresponding to actions `{left, straight, right}`.
+
+### DQN Agent
+
+**Action selection — epsilon-greedy:**
+
+```
+a = random action,          if rand() ≤ ε
+    argmax Q(s, a; θ),      otherwise
+```
+
+Epsilon decays after every training step: `ε ← max(ε_end, ε × ε_decay)`
+
+**Bellman target (used for training):**
+
+```
+y = r + γ · max Q(s', a'; θ⁻) · (1 − done)
+```
+
+Where `θ⁻` are the weights of the frozen **target network**, copied from the Q-network every `target_update_freq` steps.
+
+**Loss:**
+
+```
+L = MSE(Q(s, a; θ),  y)
+```
+
+Minimized with Adam optimizer.
+
+**Step limit per episode (prevents looping):**
+
+```
+step_max = 100 + 50 × score
+```
 
 ---
 

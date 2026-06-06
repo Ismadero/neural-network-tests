@@ -28,13 +28,14 @@ AI architecture (subject to change as experiments progress):
   - Training loop with model checkpointing and resume from checkpoint
   - Dynamic step limit per episode to penalize looping
   - Evaluation mode to watch the trained agent play
-- **20 experiments completed** — systematic hyperparameter search across reward shaping, gamma, epsilon decay, and model architecture
-  - Best result: **score avg 2.1, score max 10** (Experiment 20, episode 6200)
+- **23 experiments completed** — systematic hyperparameter search across reward shaping, gamma, epsilon decay, model architecture, and extended training
+  - Best result: **score avg 12.0, score max 35** (Experiment 23, episode 69,600)
   - Key findings:
-    - **gamma = 0.60** is the sweet spot — lower values loop more, higher values learn too slowly
-    - **distance-based reward shaping** (rewarding only when the snake reaches a new closest point to food within the episode) significantly reduced looping behavior
     - **direction channel** (Exp 15) was the single biggest architectural improvement
-  - Training plateau identified around episode 6200 — next step: prioritized experience replay
+    - **distance-based reward shaping** (rewarding only when the snake reaches a new closest point to food within the episode) significantly reduced looping behavior
+    - **gamma = 0.60** works best when training from scratch — lower values loop more, higher values learn too slowly from zero
+    - **fine-tuning with gamma = 0.90** on a pre-trained model (Exp 21→22→23) broke through the plateau dramatically: avg went from 2.9 to 12.0 over 20,000 additional episodes
+    - Model is still improving at Experiment 23 — no plateau reached yet
 
 ---
 
@@ -47,7 +48,10 @@ python3 -m venv .nnt
 source .nnt/bin/activate
 pip install pygame
 pip install numpy
-pip install torch
+pip install torch --index-url https://download.pytorch.org/whl/cpu
+
+# Or for GPU (CUDA) — select the right version for your system at:
+# https://pytorch.org/get-started/locally/
 ```
 
 ### 2. Play the game manually
